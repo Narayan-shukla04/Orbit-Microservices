@@ -1,0 +1,99 @@
+services:
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: ["mongo-data:/data/db"]
+  redis:
+    image: redis:7
+    
+    ports: ["6379:6379"]
+
+  api-gateway:
+    build: ./services/api-gateway
+    command: npm start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-service
+      - guild-service
+      - messaging-service
+      - voice-service
+    develop:
+      watch:
+        - action: sync
+          path: ./services/api-gateway
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/api-gateway/package.json
+
+  auth-service:
+    build: ./services/auth-service
+    command: npm start
+    expose:
+      - "3001"
+    depends_on:
+      - mongo
+      - redis
+    develop:
+      watch:
+        - action: sync
+          path: ./services/auth-service
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/auth-service/package.json
+
+  guild-service:
+    build: ./services/guild-service
+    command: npm start
+    expose:
+      - "3003"
+    depends_on:
+      - mongo
+    develop:
+      watch:
+        - action: sync
+          path: ./services/guild-service
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/guild-service/package.json
+  messaging-service:
+    build: ./services/messaging-service
+    command: npm start
+    expose:
+      - "3004"
+    depends_on:
+      - mongo
+    develop:
+      watch:
+        - action: sync
+          path: ./services/messaging-service
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/messaging-service/package.json
+  voice-service:
+    build: ./services/voice-service
+    command: npm start
+    expose:
+      - "3005"
+    depends_on:
+      - mongo
+    develop:
+      watch:
+        - action: sync
+          path: ./services/voice-service
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/voice-service/package.json
+
+volumes:
+  mongo-data:
