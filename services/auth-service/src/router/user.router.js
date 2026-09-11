@@ -1,15 +1,41 @@
-import express from "express"
-import authMiddleware from "../middleware/auth.middleware.js"
-import { detailUpdateController, getme } from "../controllers/user.controller.js"
+import express from "express";
+import authMiddleware from "../middleware/auth.middleware.js";
+import {
+  changePasswordController,
+  detailUpdateController,
+  getme,
+  getUsers,
+  updateProfile,
+} from "../controllers/user.controller.js";
+import upload from "../config/multer.js";
+import { validate } from "../middleware/validate.middleware.js";
+import {
+  changePasswordSchema,
+  detailControllerSchema,
+} from "../schema/user.schema.js";
 
+const router = express.Router();
 
-const router = express.Router()
+router.get("/getme", authMiddleware, getme);
+router.post("/getuser",getUsers)
 
+router.patch(
+  "/update-details",
+  authMiddleware,
+  validate(detailControllerSchema),
+  detailUpdateController,
+);
+router.patch(
+  "/update-profile",
+  authMiddleware,
+  upload.single("image"),
+  updateProfile,
+);
+router.patch(
+  "/change-password",
+  authMiddleware,
+  validate(changePasswordSchema),
+  changePasswordController,
+);
 
-router.get("/getme",authMiddleware,getme)
-
-router.patch("/update-details",authMiddleware,detailUpdateController)
-
-
-
-export default router
+export default router;

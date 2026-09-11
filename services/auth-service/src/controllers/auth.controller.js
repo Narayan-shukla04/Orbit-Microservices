@@ -14,9 +14,6 @@ export const registerController = asyncHandler(async (req, res) => {
 
   const file = req.file;
 
-  if (!fullname || !username || !email)
-    throw new appErorr("fullname, username and email are required", 400);
-
   const user = await userModel.create({
     fullname,
     username,
@@ -33,18 +30,18 @@ export const registerController = asyncHandler(async (req, res) => {
   const refreshToken = await generateToken(user._id, "7d");
 
   res.cookie("accessToken", accessToken, {
-    http: true,
+    httpOnly: true,
     secure: false,
 
     sameSite: "strict",
-    expiresIn: 30 * 60 * 1000,
+    maxAge: 30 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
-    http: true,
+    httpOnly: true,
     secure: false,
 
     sameSite: "strict",
-    expiresIn: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
   return res.status(201).json({
@@ -55,8 +52,6 @@ export const registerController = asyncHandler(async (req, res) => {
 
 export const loginController = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
-  if (!email || !password) throw new appErorr("both fields are required", 400);
 
   const user = await userModel.findOne({ email }).select("+password");
 
@@ -78,18 +73,18 @@ export const loginController = asyncHandler(async (req, res) => {
   const refreshToken = await generateToken(user._id, "7d");
 
   res.cookie("accessToken", accessToken, {
-    http: true,
+    httpOnly: true,
     secure: false,
 
     sameSite: "strict",
-    expiresIn: 30 * 60 * 1000,
+    maxAge: 30 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
-    http: true,
+    httpOnly: true,
     secure: false,
 
     sameSite: "strict",
-    expiresIn: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
   return res.status(201).json({
@@ -119,18 +114,18 @@ export const googleAuthCallback = asyncHandler(async (req, res) => {
     const refreshToken = generateToken(user._id, "7d");
 
     res.cookie("accessToken", accessToken, {
-      http: true,
+      httpOnly: true,
       secure: false,
 
       sameSite: "strict",
-      expiresIn: 30 * 60 * 1000,
+      maxAge: 30 * 60 * 1000,
     });
     res.cookie("refreshToken", refreshToken, {
-      http: true,
+      httpOnly: true,
       secure: false,
 
       sameSite: "strict",
-      expiresIn: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(200).json({
@@ -152,18 +147,18 @@ export const googleAuthCallback = asyncHandler(async (req, res) => {
   const refreshToken = generateToken(newUser._id, "7d");
 
   res.cookie("accessToken", accessToken, {
-    http: true,
+    httpOnly: true,
     secure: false,
 
     sameSite: "strict",
-    expiresIn: 30 * 60 * 1000,
+    maxAge: 30 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
-    http: true,
+    httpOnly: true,
     secure: false,
 
     sameSite: "strict",
-    expiresIn: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
   return res.status(201).json({
@@ -199,8 +194,6 @@ export const testController = asyncHandler(async (req, res) => {
 export const forgatPasswordController = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
-  if (!email) throw new appErorr("email is required", 400);
-
   const user = await userModel.findOne({ email });
 
   if (!user) throw new appErorr("user not found", 404);
@@ -234,8 +227,6 @@ export const forgatPasswordController = asyncHandler(async (req, res) => {
 export const verifyOtp = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
 
-  if (!email) throw new appErorr("email are required", 400);
-
   const storedOTP = await redis.get(`hashedOtp-${email}`);
 
   const unhash = bcrypt.compareSync(otp, storedOTP);
@@ -247,7 +238,7 @@ export const verifyOtp = asyncHandler(async (req, res) => {
   res.cookie("sessionToken", accessToken, {
     // httpOnly: true,
     secure: false,
-    expiresIn: 10 * 60 *60* 1000,
+    expiresIn: 10 * 60 * 60 * 1000,
   });
 
   return res.status(200).json({
@@ -260,15 +251,11 @@ export const resetPassword = asyncHandler(async (req, res) => {
   const { newPasword } = req.body;
   const token = req.cookies.sessionToken;
 
-  if (!newPasword) throw new appErorr("pasword are required", 400);
   if (!token) throw new appErorr("unauthrized", 401);
-
-
 
   const decode = jwt.verify(token, process.env.JWT_SECRET);
 
   if (!decode) throw new appErorr("invalid token", 401);
-
 
   const email = decode.id.email;
   const user = await userModel.findOne({ email }).select("password");

@@ -3,13 +3,15 @@ import upload from "../config/multer.js"
 import { forgatPasswordController, googleAuthCallback, loginController, logoutController, registerController, resetPassword, testController, verifyOtp } from "../controllers/auth.controller.js"
 import passport from "../utils/passport.js"
 import authMiddleware from "../middleware/auth.middleware.js"
+import { validate } from "../middleware/validate.middleware.js"
+import { forgetPassword, loginSchema, registerSchema, resetPasswordSchema, varifyOtpSchema } from "../schema/auth.schema.js"
 
 
 const router =express.Router()
 
 
-router.post("/register", upload.single("image"), registerController)
-router.post("/login",loginController)
+router.post("/register" ,upload.single("image"), validate(registerSchema),registerController)
+router.post("/login",validate(loginSchema), loginController)
 
 router.get("/google",passport.authenticate("google",{scope:["profile","email"]}))
 
@@ -22,9 +24,9 @@ router.get(
 
 
 
-router.post("/forget-password",forgatPasswordController)
-router.post("/verify-otp", verifyOtp)
-router.patch("/reset-password", resetPassword)
+router.post("/forget-password",validate(forgetPassword),forgatPasswordController)
+router.post("/verify-otp",validate(varifyOtpSchema), verifyOtp)
+router.patch("/reset-password", validate(resetPasswordSchema), resetPassword)
 
 router.post("/test",authMiddleware, testController)
 

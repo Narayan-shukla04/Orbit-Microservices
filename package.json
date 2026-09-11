@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix services/api-gateway\" \"npm run dev --prefix services/auth-service\" \"npm run dev --prefix services/guild-service\" \"npm run dev --prefix services/messaging-service\" \"npm run dev --prefix services/voice-service\""
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.3"
+  }
+}

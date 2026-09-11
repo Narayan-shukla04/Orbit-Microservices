@@ -7,6 +7,7 @@ import generateToken from "../utils/token.js";
 import crypto from "crypto";
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
+
   let accessToken = req.cookies.accessToken;
   const refreshToken = req.cookies.refreshToken;
 
@@ -52,6 +53,8 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 
   req.user=user
+
+
 
   next()
 

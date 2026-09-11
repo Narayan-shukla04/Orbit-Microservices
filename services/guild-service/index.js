@@ -1,11 +1,13 @@
-import express from "express"
+import app from "./src/app/app.js";
+import dotenv from "dotenv"
+import { connectDB } from "./src/config/db.js";
+dotenv.config()
 
 
+const port = process.env.PORT
+connectDB()
 
-const app =express()
-
-
-app.listen(3003,()=>{
-    console.log("api gateway is running in port 3000");
+app.listen(port,()=>{
+    console.log(`guild service is running in port ${port}`);
     
 })
