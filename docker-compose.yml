@@ -1,4 +1,21 @@
 services:
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
+
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_HOST: 9092
   mongo:
     image: mongo:7
     ports: ["27017:27017"]
@@ -13,6 +30,11 @@ services:
     command: npm start
     ports:
       - "3000:3000"
+    environment:
+      PORT: 3000
+      AUTH_SERVICE_URL: http://auth-service:3001
+      GUILD_SERVICE_URL: http://guild-service:3003
+      MESSAGING_SERVICE_URL: http://messaging-service:3004
     depends_on:
       - auth-service
       - guild-service
@@ -31,6 +53,12 @@ services:
   auth-service:
     build: ./services/auth-service
     command: npm start
+    environment:
+      PORT: 3001
+      MONGO_URI: mongodb://mongo:27017/discord
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: local-development-secret
     expose:
       - "3001"
     depends_on:
@@ -49,6 +77,10 @@ services:
   guild-service:
     build: ./services/guild-service
     command: npm start
+    environment:
+      PORT: 3003
+      MONGO_URI: mongodb://mongo:27017/discord
+      JWT_SECRET: local-development-secret
     ports:
       - "3003:3003"
     expose:
@@ -69,6 +101,11 @@ services:
     command: npm start
     expose:
       - "3004"
+    environment:
+      PORT: 3004
+      GUILD_SERVICE_URL: http://guild-service:3003
+      MONGO_URI: mongodb://mongo:27017/discord
+      JWT_SECRET: local-development-secret
     depends_on:
       - mongo
     develop:

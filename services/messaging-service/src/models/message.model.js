@@ -1,7 +1,7 @@
 import mongoose, { model } from "mongoose";
 
 const messageSchema=new mongoose.Schema({
-    channeld:{
+    channelId:{
        type: String,
        require:true,
        index:true

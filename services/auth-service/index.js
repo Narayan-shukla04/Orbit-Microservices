@@ -4,7 +4,7 @@ import { connectDB } from "./src/config/db.js";
 import redis from "./src/config/redis.js";
 dotenv.config()
 
-const port =process.env.PORT
+const port = process.env.PORT || 3001
 
 connectDB()
  redis.on("connect",()=>{

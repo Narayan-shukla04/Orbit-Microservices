@@ -1,13 +1,15 @@
-import express from "express"
-import dotenv from "dotenv";
+import "dotenv/config";
 import { connectDB } from "./src/config/db.js";
-dotenv.config()
-const port = process.env.PORT||3004 
+import httpServer from "./src/app/app.js";
 
-const app =express()
+
+const port = process.env.PORT || 3004;
+
+
+
+
+
 connectDB()
-
-app.listen(3004,()=>{
-    console.log(`api gateway is running in port ${port}`);
-    
-})
+httpServer.listen(port, () => {
+  console.log(`message-server is running in port ${port}`);
+});

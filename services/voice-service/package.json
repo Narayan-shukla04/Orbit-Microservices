@@ -13,6 +13,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "kafka-node": "^5.0.0",
+    "zookeeper": "^7.3.0"
   }
 }

@@ -1,5 +1,5 @@
-import AppError from "../utils/App.error";
-import asyncHandler from "./asyncHandler";
+import AppError from "../utils/App.error.js";
+import asyncHandler from "./asyncHandler.js";
 import jwt from "jsonwebtoken"
 
 export const verifyAuth=asyncHandler((req,res,next)=>{
@@ -13,7 +13,7 @@ if(!token) throw new AppError("404", "token required")
     if(!decode) throw new AppError(401,"unauthorized")
 
 
-        req.user=token.id
+        req.user = decode.id
 
         next()
 })

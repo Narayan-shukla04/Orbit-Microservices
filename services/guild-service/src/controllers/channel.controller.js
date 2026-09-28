@@ -70,3 +70,20 @@ export const getchannelController = asyncHandler(async (req, res) => {
     })
 
 });
+
+
+
+export const exportChannelDetailsController=asyncHandler(async(req,res)=>{
+
+  const {channelId}=req.body
+
+  const details=await channelModel.findById(channelId)
+
+  if(!details) throw new appError(404,"channel not found")
+
+    return res.status(200).json({
+      message:"channel details fatched successfully",
+      details
+    })
+
+})

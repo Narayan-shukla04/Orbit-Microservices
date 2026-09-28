@@ -1,13 +1,11 @@
-import express from "express"
+import "dotenv/config";
+import app from "./src/app/app.js";
+
+const port = process.env.PORT || 3000;
 
 
 
-const app =express()
-
-
-
-
-app.listen(3000,()=>{
-    console.log("api gateway is running in port 3000");
+app.listen(port,()=>{
+    console.log(`api gateway is running in ${port}`);
     
 })

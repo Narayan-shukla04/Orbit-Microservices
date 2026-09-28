@@ -22,7 +22,10 @@ export const getme = asyncHandler(async (req, res) => {
 
 export const getUsers=asyncHandler(async(req,res)=>{
 
-const userId= req.body.itrate
+const userId= req.body
+
+
+
 
 
   const users =await userModel.find({
@@ -104,3 +107,46 @@ export const changePasswordController = asyncHandler(async (req, res) => {
   })
 
 });
+
+
+
+// exports
+
+export const userDetailsById=asyncHandler(async(req,res)=>{
+  
+  const { userId } = req.body
+  if(!userId) throw new appErorr("user id is required",400)
+
+  const user=await userModel.findById(userId)
+
+  if(!user) throw new appErorr("user not found",404)
+
+  return res.status(200).json({
+    success:true,
+    message:"user details fatch successfully",
+    user,
+  })
+})
+
+
+
+export const sendingUsersDetails=asyncHandler(async(req,res)=>{
+ 
+ 
+ 
+  const {serverId} = req.body
+
+
+  const users = await userModel.find({
+    _id:{$in:serverId}
+  })
+  if (!users) throw new appErorr(404,"users not found")
+  
+
+  return res.status(200).json({
+    success:true,
+    message:"user details fatch successfully",
+    users,
+  })
+
+})

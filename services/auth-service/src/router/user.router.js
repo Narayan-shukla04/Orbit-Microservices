@@ -5,7 +5,7 @@ import {
   detailUpdateController,
   getme,
   getUsers,
-  updateProfile,
+  updateProfile,userDetailsById,sendingUsersDetails
 } from "../controllers/user.controller.js";
 import upload from "../config/multer.js";
 import { validate } from "../middleware/validate.middleware.js";
@@ -16,8 +16,14 @@ import {
 
 const router = express.Router();
 
+// export 
+router.post("/export/mydetails", userDetailsById)
+router.post("/export/usersdetails",sendingUsersDetails)
+
+
+
 router.get("/getme", authMiddleware, getme);
-router.post("/getuser",getUsers)
+router.post("/getuser", getUsers)
 
 router.patch(
   "/update-details",

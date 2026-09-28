@@ -218,3 +218,24 @@ export const leaveServer = asyncHandler(async (req, res) => {
 
  
 });
+
+
+export const getchannelMemberDetailsController=asyncHandler(async (req,res)=>{
+  console.log("router hits");
+  
+  const {serverId}=req.body
+
+  // console.log(serverId);
+  
+  
+
+  const member= await memberModel.find({serverId:serverId,userId:req.user})
+
+   console.log("server member ---->",member);
+
+  return res.status(200).json({
+    success:true,
+    message:"member details fatch successfully",
+    member,
+  })
+})
