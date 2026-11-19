@@ -1,0 +1,125 @@
+services:
+  # ── Frontend Client ───────────────────────────────────────────
+  - type: web
+    name: orbit-client
+    runtime: static
+    plan: free
+    buildCommand: npm --prefix client install && npm --prefix client run build
+    staticPublishPath: ./client/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://orbit-api-gateway.onrender.com/api
+      - key: VITE_SOCKET_URL
+        value: https://orbit-messaging-service.onrender.com
+      - key: VITE_FRIENDS_SOCKET_URL
+        value: https://orbit-friends-service.onrender.com
+
+  # ── API Gateway ───────────────────────────────────────────────
+  - type: web
+    name: orbit-api-gateway
+    runtime: docker
+    plan: free
+    dockerfilePath: ./services/api-gateway/Dockerfile
+    dockerContext: ./services/api-gateway
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://orbit-client.onrender.com
+      - fromGroup: orbit-shared-secrets
+      - key: AUTH_SERVICE_URL
+        value: http://orbit-auth-service:10000
+      - key: GUILD_SERVICE_URL
+        value: http://orbit-guild-service:10000
+      - key: MESSAGING_SERVICE_URL
+        value: http://orbit-messaging-service:10000
+      - key: FRIENDS_SERVICE_URL
+        value: http://orbit-friends-service:10000
+      - key: VOICE_SERVICE_URL
+        value: http://orbit-voice-service:10000
+
+  # ── Auth Service ──────────────────────────────────────────────
+  - type: web
+    name: orbit-auth-service
+    runtime: docker
+    plan: free
+    dockerfilePath: ./services/auth-service/Dockerfile
+    dockerContext: ./services/auth-service
+    envVars:
+      - key: PORT
+        value: 10000
+      - fromGroup: orbit-shared-secrets
+
+  # ── Guild Service ─────────────────────────────────────────────
+  - type: web
+    name: orbit-guild-service
+    runtime: docker
+    plan: free
+    dockerfilePath: ./services/guild-service/Dockerfile
+    dockerContext: ./services/guild-service
+    envVars:
+      - key: PORT
+        value: 10000
+      - fromGroup: orbit-shared-secrets
+
+  # ── Messaging Service ─────────────────────────────────────────
+  - type: web
+    name: orbit-messaging-service
+    runtime: docker
+    plan: free
+    dockerfilePath: ./services/messaging-service/Dockerfile
+    dockerContext: ./services/messaging-service
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://orbit-client.onrender.com
+      - key: GUILD_SERVICE_URL
+        value: http://orbit-guild-service:10000
+      - fromGroup: orbit-shared-secrets
+
+  # ── Friends Service ───────────────────────────────────────────
+  - type: web
+    name: orbit-friends-service
+    runtime: docker
+    plan: free
+    dockerfilePath: ./services/friends-service/Dockerfile
+    dockerContext: ./services/friends-service
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://orbit-client.onrender.com
+      - fromGroup: orbit-shared-secrets
+
+  # ── Voice Service ─────────────────────────────────────────────
+  - type: web
+    name: orbit-voice-service
+    runtime: docker
+    plan: free
+    dockerfilePath: ./services/voice-service/Dockerfile
+    dockerContext: ./services/voice-service
+    envVars:
+      - key: PORT
+        value: 10000
+      - fromGroup: orbit-shared-secrets
+      - key: LIVEKIT_URL
+        sync: false
+      - key: LIVEKIT_API_KEY
+        sync: false
+      - key: LIVEKIT_API_SECRET
+        sync: false
+
+envVarGroups:
+  - name: orbit-shared-secrets
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
