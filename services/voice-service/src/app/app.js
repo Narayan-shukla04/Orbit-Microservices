@@ -6,9 +6,15 @@ import globleErrorHandler from "../middlewares/error.middleware.js"
 
 const app = express()
 
+app.set("trust proxy", 1)
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
+
+// Health check
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", service: "voice-service" })
+})
 
 app.use("/api/calls", voiceRouter)
 

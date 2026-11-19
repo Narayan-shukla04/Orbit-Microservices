@@ -7,12 +7,17 @@ import { socketAuthMiddleware } from "../middleware/socketAuth.middleware.js";
 let io;
 
 export const initializedSocket = (server) => {
+  const clientOrigins = [
+    ...new Set([
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",").map((s) => s.trim().replace(/\/$/, "")) : []),
+    ]),
+  ];
+
   io = new Server(server, {
     cors: {
-      origin: [
-        process.env.CLIENT_URL || "http://localhost:5173",
-        "http://127.0.0.1:5173",
-      ],
+      origin: clientOrigins,
       credentials: true,
     },
   });

@@ -52,6 +52,7 @@ export const voiceProxy = makeProxy(VOICE_SERVICE_URL, "/api/calls");
 
 // ─── Public routes - bypass JWT in app.js ────────────────────────────────────
 export const PUBLIC_PATHS = [
+  "/health",
   "/api/auth/register",
   "/api/auth/login",
   "/api/auth/forget-password",

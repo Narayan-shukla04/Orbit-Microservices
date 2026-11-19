@@ -11,11 +11,17 @@ import cookieParser from "cookie-parser";
 dotenv.config()
 
 
-const app =express()
+const app = express()
 
+app.set("trust proxy", 1)
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
+
+// Health check
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", service: "guild-service" })
+})
 
 
 

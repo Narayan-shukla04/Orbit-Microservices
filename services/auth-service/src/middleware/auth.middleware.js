@@ -6,6 +6,14 @@ import redis from "../config/redis.js";
 import generateToken from "../utils/token.js";
 import crypto from "crypto";
 
+const isProd = process.env.NODE_ENV === "production";
+const getCookieOptions = (maxAge) => ({
+  httpOnly: true,
+  secure: isProd,
+  sameSite: isProd ? "none" : "lax",
+  ...(maxAge !== undefined ? { maxAge } : {}),
+});
+
 const authMiddleware = asyncHandler(async (req, res, next) => {
 
   let accessToken = req.cookies.accessToken;
@@ -43,13 +51,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
     accessToken =await generateToken(decode.id, "30min");
 
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: false,
-
-      sameSite: "strict",
-      maxAge: 30 * 60 * 1000,
-    });
+    res.cookie("accessToken", accessToken, getCookieOptions(30 * 60 * 1000));
   }
 
   const user = await userModel.findById(decode.id);

@@ -11,12 +11,17 @@ const port = process.env.PORT || 3006
 
 const httpServer = http.createServer(app)
 
+const clientOrigins = [
+  ...new Set([
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",").map((s) => s.trim().replace(/\/$/, "")) : []),
+  ]),
+]
+
 const io = new Server(httpServer, {
   cors: {
-    origin: [
-      process.env.CLIENT_URL || "http://localhost:5173",
-      "http://127.0.0.1:5173",
-    ],
+    origin: clientOrigins,
     credentials: true,
   },
 })

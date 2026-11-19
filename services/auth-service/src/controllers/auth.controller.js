@@ -9,6 +9,14 @@ import crypto from "crypto";
 import { sendEmail } from "../utils/email.js";
 import bcrypt from "bcrypt";
 
+const isProd = process.env.NODE_ENV === "production";
+const getCookieOptions = (maxAge) => ({
+  httpOnly: true,
+  secure: isProd,
+  sameSite: isProd ? "none" : "lax",
+  ...(maxAge !== undefined ? { maxAge } : {}),
+});
+
 export const registerController = asyncHandler(async (req, res) => {
   const { fullname, username, email, password, dob, mobile_no } = req.body;
 
@@ -29,20 +37,8 @@ export const registerController = asyncHandler(async (req, res) => {
   const accessToken = await generateToken(user._id, "30min");
   const refreshToken = await generateToken(user._id, "7d");
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-
-    sameSite: "strict",
-    maxAge: 30 * 60 * 1000,
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie("accessToken", accessToken, getCookieOptions(30 * 60 * 1000));
+  res.cookie("refreshToken", refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
 
   return res.status(201).json({
     success: true,
@@ -72,20 +68,8 @@ export const loginController = asyncHandler(async (req, res) => {
   const accessToken = await generateToken(user._id, "30min");
   const refreshToken = await generateToken(user._id, "7d");
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-
-    sameSite: "strict",
-    maxAge: 30 * 60 * 1000,
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie("accessToken", accessToken, getCookieOptions(30 * 60 * 1000));
+  res.cookie("refreshToken", refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
 
   return res.status(201).json({
     success: true,
@@ -113,20 +97,8 @@ export const googleAuthCallback = asyncHandler(async (req, res) => {
     const accessToken = generateToken(user._id, "30min");
     const refreshToken = generateToken(user._id, "7d");
 
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: false,
-
-      sameSite: "strict",
-      maxAge: 30 * 60 * 1000,
-    });
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: false,
-
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("accessToken", accessToken, getCookieOptions(30 * 60 * 1000));
+    res.cookie("refreshToken", refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
 
     return res.status(200).json({
       success: true,
@@ -146,20 +118,8 @@ export const googleAuthCallback = asyncHandler(async (req, res) => {
   const accessToken = generateToken(newUser._id, "30min");
   const refreshToken = generateToken(newUser._id, "7d");
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-
-    sameSite: "strict",
-    maxAge: 30 * 60 * 1000,
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie("accessToken", accessToken, getCookieOptions(30 * 60 * 1000));
+  res.cookie("refreshToken", refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
 
   return res.status(201).json({
     success: true,
@@ -179,8 +139,8 @@ export const logoutController = asyncHandler(async (req, res) => {
       7 * 24 * 60 * 60,
     );
   }
-  res.clearCookie("accessToken");
-  res.clearCookie("refreshToken");
+  res.clearCookie("accessToken", getCookieOptions());
+  res.clearCookie("refreshToken", getCookieOptions());
 
   return res.status(200).json({
     success: true,
@@ -236,11 +196,7 @@ export const verifyOtp = asyncHandler(async (req, res) => {
 
   const accessToken = await generateToken({ email }, "10min");
 
-  res.cookie("sessionToken", accessToken, {
-    // httpOnly: true,
-    secure: false,
-    expiresIn: 10 * 60 * 60 * 1000,
-  });
+  res.cookie("sessionToken", accessToken, getCookieOptions(10 * 60 * 1000));
 
   return res.status(200).json({
     success: true,

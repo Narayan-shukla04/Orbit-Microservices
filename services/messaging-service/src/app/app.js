@@ -8,8 +8,14 @@ import cookieParser from "cookie-parser"
 
 const app = express()
 
+app.set("trust proxy", 1)
 app.use(express.json())
 app.use(cookieParser())
+
+// Health check
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", service: "messaging-service" })
+})
 
 
 
