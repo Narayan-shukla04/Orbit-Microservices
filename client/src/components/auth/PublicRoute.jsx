@@ -14,7 +14,7 @@ export default function PublicRoute({ children }) {
   const location = useLocation()
 
   if (isAuthChecking) {
-    return <LoadingScreen message="Checking Chamber Session..." />
+    return <LoadingScreen message="Checking session..." />
   }
 
   if (isAuthenticated) {

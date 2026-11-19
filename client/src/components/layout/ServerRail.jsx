@@ -28,30 +28,70 @@ export default function ServerRail() {
     : []
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-[72px] bg-surface-container-lowest/90 backdrop-blur-xl border-r border-outline-variant/30 z-50 flex flex-col items-center py-space-md justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-      <div className="flex flex-col items-center gap-space-sm w-full">
-        <button type="button" onClick={() => dispatch(setActiveView("dm"))} title="Direct Messages & Friends" className={`relative group flex items-center justify-center w-12 h-12 rounded-xl transition-all cursor-pointer ${activeView === "dm" ? "bg-primary-container text-on-primary-container shadow-md" : "bg-gradient-to-tr from-surface-container to-surface-container-lowest border border-outline-variant/50 hover:border-primary-container text-primary shadow-[0_2px_8px_rgba(212,175,55,0.15)]"}`}>
-          <span className="font-code text-title-lg font-bold">OR</span>
-          <span className={`absolute -left-1 w-1 bg-primary rounded-r-full transition-transform ${activeView === "dm" ? "top-2.5 bottom-2.5 scale-y-100" : "top-3.5 bottom-3.5 scale-y-0 group-hover:scale-y-100"}`}/>
+    <aside className="fixed left-0 top-0 h-full w-[72px] bg-white border-r border-outline-variant z-50 flex flex-col items-center py-4 justify-between">
+      <div className="flex flex-col items-center gap-2 w-full">
+        {/* Direct Messages Button */}
+        <button
+          type="button"
+          onClick={() => dispatch(setActiveView("dm"))}
+          title="Direct Messages"
+          className={`relative flex items-center justify-center w-11 h-11 rounded-lg text-xs font-bold font-mono transition-colors cursor-pointer ${
+            activeView === "dm"
+              ? "bg-neutral-900 text-white"
+              : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+          }`}
+        >
+          OR
+          {activeView === "dm" && (
+            <span className="absolute -left-3 w-1 h-6 bg-neutral-900 rounded-r" />
+          )}
         </button>
-        <div className="w-8 h-px bg-outline-variant/40 my-space-xs"/>
-        <div className="flex flex-col items-center gap-space-sm w-full">
+
+        <div className="w-8 h-px bg-outline-variant my-1" />
+
+        {/* Server list */}
+        <div className="flex flex-col items-center gap-2 w-full">
           {servers.map(s => (
-            <button key={s.id} onClick={() => { dispatch(setActiveServerId(s.id)); dispatch(setActiveView("channels")); }} type="button" title={s.name}
-              className={`relative group flex items-center justify-center w-12 h-12 rounded-xl border transition-all ${s.active ? "bg-surface-container-low border-outline-variant/30 text-primary" : "bg-surface-container-lowest border-outline-variant/20 hover:bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-outline-variant/60"}`}>
-              <span className={`absolute -left-1 w-1 bg-primary rounded-r-full transition-transform ${s.active ? "top-2.5 bottom-2.5 scale-y-100" : "top-4 bottom-4 scale-y-0 group-hover:scale-y-100"}`}/>
-              <span className="text-title-md font-bold">{s.abbr}</span>
-              {s.badge && <span className="absolute -top-1 -right-1 w-4 h-4 bg-tertiary-container text-on-tertiary-container text-label-sm font-bold flex items-center justify-center rounded-full shadow-sm">{s.badge}</span>}
+            <button
+              key={s.id}
+              onClick={() => {
+                dispatch(setActiveServerId(s.id));
+                dispatch(setActiveView("channels"));
+              }}
+              type="button"
+              title={s.name}
+              className={`relative flex items-center justify-center w-11 h-11 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                s.active
+                  ? "bg-neutral-900 text-white"
+                  : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+              }`}
+            >
+              {s.abbr}
+              {s.active && (
+                <span className="absolute -left-3 w-1 h-6 bg-neutral-900 rounded-r" />
+              )}
             </button>
           ))}
-          <button onClick={() => dispatch(setActiveView("create-chamber"))} type="button" title="Create Chamber" className="flex items-center justify-center w-12 h-12 rounded-xl bg-surface-container border border-dashed border-outline-variant hover:border-primary hover:bg-primary-container/10 text-primary transition-all group cursor-pointer">
-            <span className="material-symbols-outlined text-[22px] group-hover:scale-110 transition-transform">add</span>
+
+          {/* Add Server Button */}
+          <button
+            onClick={() => dispatch(setActiveView("create-chamber"))}
+            type="button"
+            title="Create Server"
+            className="flex items-center justify-center w-11 h-11 rounded-lg border border-dashed border-neutral-300 hover:border-neutral-900 text-neutral-600 hover:text-neutral-900 transition-colors cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[20px]">add</span>
           </button>
         </div>
       </div>
-      <div className="flex flex-col items-center gap-space-sm w-full">
-        <button type="button" className="flex items-center justify-center w-12 h-12 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-all">
-          <span className="material-symbols-outlined text-[20px]">download</span>
+
+      <div className="flex flex-col items-center gap-2 w-full">
+        <button
+          type="button"
+          title="Client"
+          className="flex items-center justify-center w-11 h-11 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition-colors"
+        >
+          <span className="material-symbols-outlined text-[18px]">terminal</span>
         </button>
       </div>
     </aside>

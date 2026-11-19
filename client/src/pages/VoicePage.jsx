@@ -29,24 +29,24 @@ function ParticipantTile({ p }) {
   const hasVideo = p.participant?.videoTrackPublications?.size > 0
 
   return (
-    <div className={`relative flex flex-col items-center justify-center w-52 h-44 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 p-5 shadow-lg transition-all overflow-hidden ${p.isSpeaking ? "ring-2 ring-nx-green shadow-[0_0_24px_rgba(35,165,89,0.2)]" : ""}`}>
+    <div className={`relative flex flex-col items-center justify-center w-48 h-40 rounded-lg bg-white border transition-colors overflow-hidden ${p.isSpeaking ? "border-emerald-600 ring-1 ring-emerald-600" : "border-outline-variant"}`}>
       {hasVideo ? (
-        <video ref={videoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover rounded-2xl" />
+        <video ref={videoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover" />
       ) : (
-        <div className="relative w-20 h-20 rounded-full bg-gradient-to-tr from-primary-container to-secondary flex items-center justify-center text-2xl font-bold text-on-primary shadow-md">
+        <div className="relative w-16 h-16 rounded-full bg-neutral-200 border border-outline-variant flex items-center justify-center text-lg font-semibold text-neutral-800">
           {initials}
           {p.isMuted && (
-            <span className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#da373c] text-white flex items-center justify-center shadow">
-              <span className="material-symbols-outlined text-[14px]">mic_off</span>
+            <span className="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-red-600 text-white flex items-center justify-center">
+              <span className="material-symbols-outlined text-[12px]">mic_off</span>
             </span>
           )}
         </div>
       )}
-      <div className={`mt-3 flex items-center gap-1.5 text-center ${hasVideo ? "absolute bottom-2 left-2 bg-surface/85 backdrop-blur-sm px-2 py-0.5 rounded-lg" : ""}`}>
-        <span className="text-body-sm font-bold text-on-surface truncate max-w-[150px]">
+      <div className={`mt-3 flex items-center gap-1.5 text-center ${hasVideo ? "absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-white" : ""}`}>
+        <span className="text-xs font-medium text-on-surface truncate max-w-[140px]">
           {p.name} {p.isLocal && "(You)"}
         </span>
-        {p.isSpeaking && <span className="w-2 h-2 rounded-full bg-nx-green animate-pulse" />}
+        {p.isSpeaking && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />}
       </div>
     </div>
   )
@@ -79,15 +79,15 @@ export default function VoicePage() {
   } = useVoice(activeChannelId, displayName)
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-surface bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-surface-container-low via-surface to-surface-container-high text-on-surface overflow-hidden select-none">
-      {/* Top channel header in light theme */}
-      <header className="h-12 px-5 border-b border-outline-variant/30 flex items-center justify-between flex-shrink-0 z-10 bg-surface/80 backdrop-blur-sm">
+    <div className="flex-1 flex flex-col h-full bg-neutral-50 text-on-surface overflow-hidden select-none">
+      {/* Top channel header */}
+      <header className="h-12 px-4 border-b border-outline-variant flex items-center justify-between flex-shrink-0 z-10 bg-white">
         <div className="flex items-center gap-2 text-on-surface font-semibold">
-          <span className="material-symbols-outlined text-[20px] text-outline">volume_up</span>
-          <span className="text-body-md font-bold text-on-surface tracking-tight">{channelTitle}</span>
+          <span className="material-symbols-outlined text-[18px] text-neutral-500">volume_up</span>
+          <span className="text-xs font-bold text-on-surface tracking-tight">{channelTitle}</span>
           {isConnected && (
-            <span className="ml-2 text-label-sm font-semibold text-nx-green flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-nx-green animate-ping" />
+            <span className="ml-2 text-xs font-medium text-emerald-600 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
               Connected
             </span>
           )}
@@ -97,9 +97,9 @@ export default function VoicePage() {
             onClick={() => dispatch(setActiveView("channels"))}
             type="button"
             title="Open Chat"
-            className="p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors"
+            className="p-1.5 rounded text-neutral-500 hover:text-on-surface hover:bg-neutral-100 transition-colors"
           >
-            <span className="material-symbols-outlined text-[20px]">chat</span>
+            <span className="material-symbols-outlined text-[18px]">chat</span>
           </button>
         </div>
       </header>
@@ -107,73 +107,73 @@ export default function VoicePage() {
       {/* Main voice arena */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 relative">
         {error && (
-          <div className="absolute top-4 px-4 py-2 bg-error-container/80 text-on-error-container border border-error/30 rounded-xl text-body-sm shadow">
+          <div className="absolute top-4 px-3 py-1.5 bg-red-50 text-red-700 border border-red-200 rounded text-xs font-medium">
             {error}
           </div>
         )}
 
         {!isConnected ? (
           /* Empty / Unconnected State */
-          <div className="flex flex-col items-center text-center animate-fade-in">
-            <h1 className="text-3xl sm:text-4xl font-bold text-on-surface tracking-tight">
+          <div className="flex flex-col items-center text-center">
+            <h1 className="text-2xl font-bold text-on-surface tracking-tight">
               {channelTitle}
             </h1>
-            <p className="mt-2 mb-6 text-body-sm font-medium text-outline">
-              {!activeChannelId ? "Select a voice channel to connect" : "Ready to join high-definition voice"}
+            <p className="mt-1 mb-5 text-xs text-neutral-500">
+              {!activeChannelId ? "Select a voice channel to connect" : "Ready to join voice"}
             </p>
             <button
               onClick={connect}
               disabled={isConnecting || !activeChannelId}
               type="button"
-              className="px-8 py-2.5 bg-on-surface hover:bg-on-surface/90 disabled:opacity-50 text-surface font-semibold text-sm rounded-full shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer flex items-center gap-2"
+              className="px-5 py-2 bg-on-surface hover:bg-neutral-800 disabled:opacity-50 text-white font-medium text-xs rounded transition-colors cursor-pointer flex items-center gap-2"
             >
-              {isConnecting && <span className="w-4 h-4 rounded-full border-2 border-surface border-t-transparent animate-spin" />}
+              {isConnecting && <span className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />}
               <span>{isConnecting ? "Connecting..." : "Join Voice"}</span>
             </button>
           </div>
         ) : (
           /* Connected State */
-          <div className="flex flex-col items-center justify-between h-full w-full max-w-4xl py-6 animate-fade-in">
-            <div className="flex-1 flex flex-wrap items-center justify-center gap-5 p-4 overflow-y-auto">
+          <div className="flex flex-col items-center justify-between h-full w-full max-w-4xl py-6">
+            <div className="flex-1 flex flex-wrap items-center justify-center gap-4 p-4 overflow-y-auto">
               {participants.map(p => (
                 <ParticipantTile key={p.id} p={p} />
               ))}
             </div>
 
-            {/* Bottom floating dock */}
-            <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-surface-container-lowest/95 backdrop-blur-md border border-outline-variant/30 shadow-xl">
+            {/* Bottom dock */}
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-outline-variant">
               <button
                 onClick={toggleMute}
                 type="button"
                 title={muted ? "Unmute" : "Mute"}
-                className={`p-2.5 rounded-xl transition-all cursor-pointer ${muted ? "bg-[#da373c] text-white" : "bg-surface-container hover:bg-surface-container-high text-on-surface"}`}
+                className={`p-2 rounded transition-colors cursor-pointer ${muted ? "bg-red-600 text-white hover:bg-red-700" : "text-neutral-700 hover:bg-neutral-100"}`}
               >
-                <span className="material-symbols-outlined text-[20px]">{muted ? "mic_off" : "mic"}</span>
+                <span className="material-symbols-outlined text-[18px]">{muted ? "mic_off" : "mic"}</span>
               </button>
               <button
                 onClick={toggleDeafen}
                 type="button"
                 title={deafened ? "Undeafen" : "Deafen"}
-                className={`p-2.5 rounded-xl transition-all cursor-pointer ${deafened ? "bg-[#da373c] text-white" : "bg-surface-container hover:bg-surface-container-high text-on-surface"}`}
+                className={`p-2 rounded transition-colors cursor-pointer ${deafened ? "bg-red-600 text-white hover:bg-red-700" : "text-neutral-700 hover:bg-neutral-100"}`}
               >
-                <span className="material-symbols-outlined text-[20px]">{deafened ? "headset_off" : "headphones"}</span>
+                <span className="material-symbols-outlined text-[18px]">{deafened ? "headset_off" : "headphones"}</span>
               </button>
               <button
                 onClick={toggleScreenShare}
                 type="button"
                 title={sharing ? "Stop Sharing" : "Share Screen"}
-                className={`p-2.5 rounded-xl transition-all cursor-pointer ${sharing ? "bg-primary-container text-on-primary-container" : "bg-surface-container hover:bg-surface-container-high text-on-surface"}`}
+                className={`p-2 rounded transition-colors cursor-pointer ${sharing ? "bg-blue-600 text-white" : "text-neutral-700 hover:bg-neutral-100"}`}
               >
-                <span className="material-symbols-outlined text-[20px]">screen_share</span>
+                <span className="material-symbols-outlined text-[18px]">screen_share</span>
               </button>
-              <div className="h-6 w-px bg-outline-variant/40 mx-1" />
+              <div className="h-4 w-px bg-neutral-200 mx-1" />
               <button
                 onClick={disconnect}
                 type="button"
                 title="Disconnect"
-                className="px-4 py-2 rounded-xl bg-[#da373c] hover:bg-[#c02e34] text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md active:scale-95"
+                className="px-3 py-1.5 rounded bg-red-600 hover:bg-red-700 text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[18px]">call_end</span>
+                <span className="material-symbols-outlined text-[16px]">call_end</span>
                 <span>Disconnect</span>
               </button>
             </div>

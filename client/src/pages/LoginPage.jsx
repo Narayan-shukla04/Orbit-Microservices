@@ -33,23 +33,23 @@ export default function LoginPage() {
 
   return (
     <AuthLayout
-      title="Welcome Back to Orbit"
-      subtitle="Enter your credentials to access your chambers"
+      title="Sign in to Orbit"
+      subtitle="Enter your email and password to access your account"
       activeTab="login"
       error={loginMutation.error?.message}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-label-md font-semibold text-on-surface mb-1.5">
-            Email Address
+          <label className="block text-xs font-medium text-neutral-700 mb-1">
+            Email
           </label>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3.5 top-3 text-[18px] text-outline pointer-events-none">
+            <span className="material-symbols-outlined absolute left-3 top-2.5 text-[16px] text-neutral-400 pointer-events-none">
               mail
             </span>
             <input
               type="email"
-              placeholder="syndicate@orbit.community"
+              placeholder="name@example.com"
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -57,30 +57,30 @@ export default function LoginPage() {
                   message: "Invalid email format",
                 },
               })}
-              className="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border border-outline-variant/40 rounded-xl text-body-sm text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary-container focus:bg-surface-container-lowest transition-all"
+              className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-outline-variant rounded text-xs text-on-surface placeholder:text-neutral-400 focus:outline-none focus:border-on-surface focus:bg-white transition-colors"
             />
           </div>
           {errors.email && (
-            <span className="text-label-sm text-error mt-1 block">
+            <span className="text-[11px] text-red-600 mt-1 block">
               {errors.email.message}
             </span>
           )}
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-label-md font-semibold text-on-surface">
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-xs font-medium text-neutral-700">
               Password
             </label>
             <a
               href="#"
-              className="text-label-sm font-semibold text-primary hover:underline"
+              className="text-xs text-neutral-500 hover:text-on-surface transition-colors"
             >
-              Forgot code?
+              Forgot password?
             </a>
           </div>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3.5 top-3 text-[18px] text-outline pointer-events-none">
+            <span className="material-symbols-outlined absolute left-3 top-2.5 text-[16px] text-neutral-400 pointer-events-none">
               lock
             </span>
             <input
@@ -93,11 +93,11 @@ export default function LoginPage() {
                   message: "Minimum 6 characters required",
                 },
               })}
-              className="w-full pl-10 pr-4 py-2.5 bg-surface-container-low border border-outline-variant/40 rounded-xl text-body-sm text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary-container focus:bg-surface-container-lowest transition-all"
+              className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-outline-variant rounded text-xs text-on-surface placeholder:text-neutral-400 focus:outline-none focus:border-on-surface focus:bg-white transition-colors"
             />
           </div>
           {errors.password && (
-            <span className="text-label-sm text-error mt-1 block">
+            <span className="text-[11px] text-red-600 mt-1 block">
               {errors.password.message}
             </span>
           )}
@@ -106,20 +106,15 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loginMutation.isPending}
-          className="w-full mt-2 py-3 rounded-xl bg-gradient-to-r from-primary-fixed-dim via-primary-container to-secondary-container text-on-primary-fixed font-bold text-title-sm shadow-[0_0_20px_rgba(212,175,55,0.35)] hover:shadow-[0_0_28px_rgba(212,175,55,0.55)] transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full mt-2 py-2 rounded bg-on-surface text-white font-medium text-xs hover:bg-neutral-800 disabled:opacity-60 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
         >
           {loginMutation.isPending ? (
             <>
-              <span className="w-4 h-4 border-2 border-on-primary-fixed border-t-transparent rounded-full animate-spin" />
-              <span>Verifying Credentials...</span>
+              <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span>Signing in...</span>
             </>
           ) : (
-            <>
-              <span>Access Chambers</span>
-              <span className="material-symbols-outlined text-[18px]">
-                arrow_forward
-              </span>
-            </>
+            <span>Sign in</span>
           )}
         </button>
       </form>

@@ -14,7 +14,7 @@ export default function ProtectedRoute({ children }) {
   const location = useLocation()
 
   if (isAuthChecking) {
-    return <LoadingScreen message="Verifying Enclave Credentials..." />
+    return <LoadingScreen message="Checking session..." />
   }
 
   if (!isAuthenticated) {
