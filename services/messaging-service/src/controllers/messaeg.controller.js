@@ -71,34 +71,34 @@ console.log("hittrs");
   
   if (!channelDetails) throw new AppError(404, "channel not found")
 
-  const ServerMember = await serverMemberDetails(channelDetails.serverId, cookies)
- 
-  if (!ServerMember) throw new AppError(403, "not authorized")
+  const ServerMember = await serverMemberDetails(channelDetails.serverId, cookies);
+  if (!ServerMember || (Array.isArray(ServerMember) && ServerMember.length === 0)) {
+    throw new AppError(403, "not authorized");
+  }
 
+    const findMessages = await messageModel.find({ channelId }).sort({ createdAt: 1 });
 
-    let membersUserId=[]
-ServerMember.map((e)=>{
-membersUserId.push(e.userId)
-})
+    const authorIds = [...new Set(findMessages.map(m => m.authorId).filter(Boolean))];
+    let allMembers = [];
+    if (authorIds.length > 0) {
+      try {
+        allMembers = await multipleUsersDetails(authorIds);
+      } catch (_) {
+        allMembers = [];
+      }
+    }
 
-    
-    
-    const members= await multipleUsersDetails(membersUserId)
-// console.log("members", members);
-
-    const findMessages=await messageModel.find({
-      authorId: { $in: members.map(member=>member._id) }
-    })
-
-    // console.log("find messages", findMessages);
-    
-
-    let result=findMessages.map((e)=>({
-      user: members.find(p=>String(e.authorId)===String(p._id)),
-      content:e.content,
-      createdAt:e.createdAt,
-      updatedAt:e.updatedAt
-    }))
+    let result = findMessages.map((e) => ({
+      _id: e._id,
+      user: allMembers.find(p => String(e.authorId) === String(p._id)) || {
+        _id: e.authorId,
+        username: "Member",
+        fullname: "Chamber Member"
+      },
+      content: e.content,
+      createdAt: e.createdAt,
+      updatedAt: e.updatedAt
+    }));
     
     console.log(result);
     

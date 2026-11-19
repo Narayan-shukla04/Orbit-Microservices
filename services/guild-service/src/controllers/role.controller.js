@@ -6,21 +6,20 @@ import { appError } from "../utils/appError.js";
 
 export const createRoleController = asyncHandler(async (req, res) => {
   const { serverId } = req.params;
-
   const { rolename, position, color, rolePermissions } = req.body;
 
   const server = await serverModel.findOne({ _id: serverId });
-
   if (!server) throw new appError(404, "server not found");
 
-  if (!(server.owner === req.user))
-    throw new appError(401, "only owner can create the roles");
+  if (server.owner.toString() !== req.user?.toString())
+    throw new appError(403, "only owner can create roles");
 
   const servermember = await memberModel.findOne({ serverId });
-
   if (!servermember) throw new appError(404, "member is not found");
 
-  const arr = rolePermissions.split(" ");
+  const arr = Array.isArray(rolePermissions)
+    ? rolePermissions
+    : (rolePermissions || "").split(/[,\s]+/).filter(Boolean);
 
   const role = await roleModel.create({
     name: rolename,
@@ -31,10 +30,12 @@ export const createRoleController = asyncHandler(async (req, res) => {
   });
 
   servermember.role.push(role._id);
+  await servermember.save();
 
   return res.status(200).json({
     success: true,
     message: "role created successfully",
+    role,
   });
 });
 
@@ -43,22 +44,21 @@ export const updateRoleController = asyncHandler(async (req, res) => {
   const { rolename, position, color, rolePermissions, newrolename } = req.body;
 
   const server = await serverModel.findById(serverId);
+  if (!server) throw new appError(404, "server not found");
 
-  if (!(server.owner === req.user))
-    throw new appError(401, "unauthrized access!");
+  if (server.owner.toString() !== req.user?.toString())
+    throw new appError(403, "unauthorized access");
 
   const role = await roleModel.findOne({ serverId, name: rolename });
-
   if (!role) throw new appError(404, "role not found");
 
-  role.name = newrolename;
-
-  if (!(position === undefined)) role.position = position;
-  if (!(color === undefined)) role.color = color;
-  if (!(rolePermissions === undefined)) {
-    const arr = rolePermissions.split(",");
-
-    role.Permissions = arr;
+  if (newrolename) role.name = newrolename;
+  if (position !== undefined) role.position = position;
+  if (color !== undefined) role.color = color;
+  if (rolePermissions !== undefined) {
+    role.Permissions = Array.isArray(rolePermissions)
+      ? rolePermissions
+      : rolePermissions.split(/[,\s]+/).filter(Boolean);
   }
 
   await role.save();
@@ -74,18 +74,14 @@ export const getAllRolesController = asyncHandler(async (req, res) => {
   const { serverId } = req.params;
 
   const server = await serverModel.findById(serverId);
+  if (!server) throw new appError(404, "server not found");
 
-  if (!(server.owner === req.user))
-    throw new appError(401, "unauthrized access");
-
-  const role = await roleModel.find({ serverId: server._id });
-
-  if (!role) throw new appError(404, "roles not defind");
+  const roles = await roleModel.find({ serverId: server._id });
 
   return res.status(200).json({
     success: true,
-    message: "all roles fatched successfully",
-    roles: role,
+    message: "all roles fetched successfully",
+    roles: roles || [],
   });
 });
 
@@ -94,18 +90,16 @@ export const deleteRoleController = asyncHandler(async (req, res) => {
   const { rolename } = req.body;
 
   const server = await serverModel.findById(serverId);
+  if (!server) throw new appError(404, "server not found");
 
-  if (!(server.owner === req.user))
-    throw new appError(401, "unauthrized access");
+  if (server.owner.toString() !== req.user?.toString())
+    throw new appError(403, "unauthorized access");
 
   const role = await roleModel.findOneAndDelete({ serverId, name: rolename });
-  console.log(role);
-  
-
   if (!role) throw new appError(404, "role not found");
 
-  return res.status(201).json({
-    success:true,
-    message:"role delete successfully"
-  })
+  return res.status(200).json({
+    success: true,
+    message: "role delete successfully",
+  });
 });

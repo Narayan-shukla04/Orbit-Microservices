@@ -10,7 +10,13 @@ const app = express();
 // The gateway proxies raw request streams to downstream services.
 // Parsing the body with express.json() consumes the stream and causes
 // the proxy to hang or forward empty bodies (the #1 cause of slowness).
-app.use(cors());
+app.use(cors({
+  origin: [
+    process.env.CLIENT_URL || "http://localhost:5173",
+    "http://127.0.0.1:5173",
+  ],
+  credentials: true,
+}));
 app.use(cookieParser()); // needed to read the JWT cookie
 
 // Skip JWT verification for public auth routes (register, login, google, etc.)

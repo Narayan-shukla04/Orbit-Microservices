@@ -11,7 +11,6 @@ const channelSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: "general",
-    unique: true,
   },
   type: {
     type: String,

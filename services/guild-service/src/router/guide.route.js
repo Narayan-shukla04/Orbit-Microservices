@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import { verifyAuthUser } from "../middlewares/auth.middleware.js";
-import { createServerController, deleteServerController, getchannelMemberDetailsController, getServerController, joinServerController, kickMembercontroller, leaveServer, serverDetailcontroller } from "../controllers/guide.controller.js";
+import { createServerController, deleteServerController, generateInviteCodeController, getchannelMemberDetailsController, getServerController, joinServerController, kickMembercontroller, leaveServer, serverDetailcontroller } from "../controllers/guide.controller.js";
 import upload from "../config/multer.js";
 
 
@@ -17,6 +17,7 @@ router.get("/getserver",getServerController)
 router.get("/getserver-details",serverDetailcontroller)
 
 router.post("/join-server/:invitecode",joinServerController)
+router.post("/invite/generate", generateInviteCodeController)
 
 router.delete("/delete-server",deleteServerController)
 

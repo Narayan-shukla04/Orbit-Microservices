@@ -170,14 +170,15 @@ export const googleAuthCallback = asyncHandler(async (req, res) => {
 export const logoutController = asyncHandler(async (req, res) => {
   const token = req.cookies.refreshToken;
 
-  const hashToken = crypto.createHash("sha256").update(token).digest("hex");
-
-  await redis.set(
-    `berrar:cookie-${req.user.id}`,
-    hashToken,
-    "EX",
-    7 * 24 * 60 * 60,
-  );
+  if (token) {
+    const hashToken = crypto.createHash("sha256").update(token).digest("hex");
+    await redis.set(
+      `berrar:cookie-${req.user.id}`,
+      hashToken,
+      "EX",
+      7 * 24 * 60 * 60,
+    );
+  }
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
 

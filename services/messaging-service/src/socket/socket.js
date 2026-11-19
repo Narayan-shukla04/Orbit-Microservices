@@ -7,49 +7,43 @@ import { socketAuthMiddleware } from "../middleware/socketAuth.middleware.js";
 let io;
 
 export const initializedSocket = (server) => {
-  io = new Server(server);
+  io = new Server(server, {
+    cors: {
+      origin: [
+        process.env.CLIENT_URL || "http://localhost:5173",
+        "http://127.0.0.1:5173",
+      ],
+      credentials: true,
+    },
+  });
 
-  io.use(socketAuthMiddleware)
+  io.use(socketAuthMiddleware);
 
   io.on("connection", (socket) => {
-    console.log("socket connect ", socket.id);
-    socket.on("join-channel",asyncHandler(async(channelId)=>{
+    console.log("socket connected:", socket.id, "userId:", socket.user);
 
-     try {
-       const channelDetails= await channeldetails(channelId)
+    socket.on("join-channel", async (channelId) => {
+      try {
+        if (!channelId) return;
+        socket.join(`channel-${channelId}`);
+        console.log(`Socket ${socket.id} joined channel-${channelId}`);
+      } catch (error) {
+        console.error("Error joining channel socket:", error.message);
+      }
+    });
 
-      if(!channelDetails) throw new AppError(404,"channel not found")
-
-
-        const serverMember= await serverMemberDetails({serverId:channelDetails.serverId,userId:socket.user})
-
-        if(!serverMember) throw new AppError(404,"server member not found")
-
-        socket.join(`channel-${channelId}`)
-        
-     } catch (error) {
-        
-        return next(new AppError(500, "Internal Server Error"))
-     }
-
-      
-    })
-  )
-
-  socket.on("leave-channel",asyncHandler(async(channelId)=>{
-    try {
-      socket.leave(`channel-${channelId}`)
-
-      
-      
-    } catch (error) {
-      console.log(error.message);
-    }
-  }))
-
+    socket.on("leave-channel", async (channelId) => {
+      try {
+        if (!channelId) return;
+        socket.leave(`channel-${channelId}`);
+        console.log(`Socket ${socket.id} left channel-${channelId}`);
+      } catch (error) {
+        console.error("Error leaving channel socket:", error.message);
+      }
+    });
 
     socket.on("disconnect", () => {
-      console.log("socket dissconect", socket.id);
+      console.log("socket disconnected", socket.id);
     });
   });
 };

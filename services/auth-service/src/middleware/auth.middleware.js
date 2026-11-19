@@ -15,20 +15,25 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 
   if (accessToken) {
-    decode = jwt.verify(accessToken, process.env.JWT_SECRET);
-    if(!decode) decode=null
+    try {
+      decode = jwt.verify(accessToken, process.env.JWT_SECRET);
+    } catch {
+      decode = null;
+    }
   } else {
     decode = null;
   }
 
   if (!decode) {
     if (!refreshToken) {
-      throw new appErorr("token expired", 400);
+      throw new appErorr("token expired", 401);
     }
 
-    decode = jwt.verify(refreshToken, process.env.JWT_SECRET);
-
-    if (!decode) throw new appErorr("invalid refresh token", 401);
+    try {
+      decode = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    } catch {
+      throw new appErorr("invalid refresh token", 401);
+    }
 
     
     const hasedBlacklistedToken=crypto.createHash("sha256").update(refreshToken).digest("hex")

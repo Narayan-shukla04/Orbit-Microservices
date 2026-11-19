@@ -32,14 +32,18 @@ services:
       - "3000:3000"
     environment:
       PORT: 3000
+      JWT_SECRET: local-development-secret
       AUTH_SERVICE_URL: http://auth-service:3001
       GUILD_SERVICE_URL: http://guild-service:3003
       MESSAGING_SERVICE_URL: http://messaging-service:3004
+      FRIENDS_SERVICE_URL: http://friends-service:3006
+      VOICE_SERVICE_URL: http://voice-service:3005
     depends_on:
       - auth-service
       - guild-service
       - messaging-service
       - voice-service
+      - friends-service
     develop:
       watch:
         - action: sync
@@ -105,9 +109,12 @@ services:
       PORT: 3004
       GUILD_SERVICE_URL: http://guild-service:3003
       MONGO_URI: mongodb://mongo:27017/discord
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       JWT_SECRET: local-development-secret
     depends_on:
       - mongo
+      - redis
     develop:
       watch:
         - action: sync
@@ -120,8 +127,16 @@ services:
   voice-service:
     build: ./services/voice-service
     command: npm start
+    ports:
+      - "3005:3005"
     expose:
       - "3005"
+    environment:
+      PORT: 3005
+      JWT_SECRET: local-development-secret
+      LIVEKIT_URL: ${LIVEKIT_URL}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
     depends_on:
       - mongo
     develop:
@@ -133,6 +148,29 @@ services:
             - node_modules/
         - action: rebuild
           path: ./services/voice-service/package.json
+
+  friends-service:
+    build: ./services/friends-service
+    command: npm start
+    ports:
+      - "3006:3006"
+    expose:
+      - "3006"
+    environment:
+      PORT: 3006
+      MONGO_URI: mongodb://mongo:27017/discord
+      JWT_SECRET: local-development-secret
+    depends_on:
+      - mongo
+    develop:
+      watch:
+        - action: sync
+          path: ./services/friends-service
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./services/friends-service/package.json
 
 volumes:
   mongo-data:

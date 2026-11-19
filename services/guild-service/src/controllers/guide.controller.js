@@ -22,15 +22,14 @@ export const createServerController = asyncHandler(async (req, res) => {
 
   let icon = null;
   let banner = null;
-  console.log(file.icon[0].originalname);
 
-  if (file.icon) {
+  if (file?.icon?.[0]) {
     icon = await storageInstance(
       file.icon[0].buffer,
       file.icon[0].originalname,
     );
   }
-  if (file.banner) {
+  if (file?.banner?.[0]) {
     banner = await storageInstance(
       file.banner[0].buffer,
       file.banner[0].originalname,
@@ -44,18 +43,17 @@ export const createServerController = asyncHandler(async (req, res) => {
     description,
     owner,
     invitecode: invitecode,
-    icon: icon.url || null,
-    banner: banner.url || null,
+    icon: icon?.url || null,
+    banner: banner?.url || null,
   });
 
   const userrole = await userRoles(server._id);
   const ownerrole = await ownerRoles(server._id);
 
-  memberGenerator(owner, server._id, [userrole, ownerrole]);
+  await memberGenerator(owner, server._id, [userrole, ownerrole]);
 
-
-  channelGenerator(server._id,"general text","text",1)
-  channelGenerator(server._id,"general voice","voice",2)
+  await channelGenerator(server._id,"general text","text",1);
+  await channelGenerator(server._id,"general voice","voice",2);
 
   return res.status(201).json({
     success: true,
@@ -67,21 +65,28 @@ export const createServerController = asyncHandler(async (req, res) => {
 export const getServerController = asyncHandler(async (req, res) => {
   const userId = req.user;
 
-  const server = await serverModel.findOne({ owner: userId });
+  const memberships = await memberModel.find({ userId }).select("serverId");
+  const memberServerIds = memberships.map((m) => m.serverId);
 
-  if(!server) throw new appError(404,"server not found")
+  const servers = await serverModel.find({
+    $or: [{ owner: userId }, { _id: { $in: memberServerIds } }],
+  });
 
   return res.status(200).json({
     success: true,
-    message: "server fatched",
-    server,
+    message: "servers fetched",
+    servers,
+    server: servers[0] || null,
   });
 });
 
 export const serverDetailcontroller = asyncHandler(async (req, res) => {
-  const server = await serverModel.findOne({ owner: req.user });
+  const serverId = req.query?.serverId || req.body?.serverId;
+  const server = serverId
+    ? await serverModel.findById(serverId)
+    : await serverModel.findOne({ owner: req.user });
 
-  if (!server) throw new appError(401, "only admin can access details");
+  if (!server) throw new appError(404, "server not found");
 
   const member = await memberModel.find({ serverId: server._id }).populate({
     path: "role",
@@ -92,13 +97,15 @@ export const serverDetailcontroller = asyncHandler(async (req, res) => {
     return e.userId;
   });
 
-  const response = await axios.post("http://localhost:3001/api/user/getuser", {
-    itrate,
-  });
-
-  const usersDetails = response.data.users;
-
-  const roles = await roleModel.find({ serverId: server._id });
+  let usersDetails = [];
+  try {
+    const response = await axios.post("http://localhost:3001/api/user/getuser", {
+      itrate,
+    });
+    usersDetails = response.data.users || [];
+  } catch (_) {
+    usersDetails = [];
+  }
 
   const result = member.map((m) => {
     const user = usersDetails.find(
@@ -113,8 +120,10 @@ export const serverDetailcontroller = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     success: true,
-    message: "server details fatch successfully",
+    message: "server details fetched successfully",
+    server,
     result,
+    members: result,
   });
 });
 
@@ -125,21 +134,38 @@ export const joinServerController = asyncHandler(async (req, res) => {
 
   if (!server) throw new appError(404, "invalid invite code");
 
-  if (server.owner === req.user)
+  const userId = req.user || jwtDecode(req.cookies?.accessToken)?.id;
+
+  if (server.owner.toString() === userId?.toString())
     throw new appError(
       400,
       "you are already owner you dont need to join it bro!",
     );
 
-  const userrole=await roleModel.findOne({serverId:server._id, name:"@everyone"})
+  const existingMember = await memberModel.findOne({
+    userId,
+    serverId: server._id,
+  });
 
-  
+  if (existingMember) {
+    return res.status(200).json({
+      success: true,
+      message: "already a member of this server",
+      member: existingMember,
+      server,
+    });
+  }
 
-
-  const currentUserId =  jwtDecode(req.cookies.accessToken);
+  let userrole = await roleModel.findOne({ serverId: server._id, name: "@everyone" });
+  if (!userrole) {
+    userrole = await roleModel.findOne({ serverId: server._id });
+  }
+  if (!userrole) {
+    userrole = await userRoles(server._id);
+  }
 
   const member = await memberGenerator(
-    currentUserId.id,
+    userId,
     server._id,
     userrole._id,
   );
@@ -148,6 +174,7 @@ export const joinServerController = asyncHandler(async (req, res) => {
     success: true,
     message: "server joined successfully",
     member,
+    server,
   });
 });
 
@@ -220,22 +247,43 @@ export const leaveServer = asyncHandler(async (req, res) => {
 });
 
 
-export const getchannelMemberDetailsController=asyncHandler(async (req,res)=>{
-  console.log("router hits");
-  
-  const {serverId}=req.body
+export const getchannelMemberDetailsController = asyncHandler(async (req, res) => {
+  const { serverId } = req.body;
+  const userId = req.user;
 
-  // console.log(serverId);
-  
-  
+  const server = await serverModel.findById(serverId);
+  const isOwner = server && String(server.owner) === String(userId);
 
-  const member= await memberModel.find({serverId:serverId,userId:req.user})
-
-   console.log("server member ---->",member);
+  let member = await memberModel.find({ serverId, userId });
+  if (member.length === 0 && isOwner) {
+    member = [{ userId, serverId, role: [] }];
+  }
 
   return res.status(200).json({
-    success:true,
-    message:"member details fatch successfully",
+    success: true,
+    message: "member details fetched successfully",
     member,
-  })
-})
+  });
+});
+
+export const generateInviteCodeController = asyncHandler(async (req, res) => {
+  const userId = req.user;
+  const { serverId } = req.body || {};
+  
+  const server = serverId
+    ? await serverModel.findById(serverId)
+    : await serverModel.findOne({ owner: userId });
+
+  if (!server) throw new appError(404, "Server not found");
+
+  const newCode = inviteCodeGenerater();
+  server.invitecode = newCode;
+  await server.save();
+
+  return res.status(200).json({
+    success: true,
+    message: "Invite code generated successfully",
+    invitecode: newCode,
+    server,
+  });
+});
