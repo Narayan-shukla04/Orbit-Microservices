@@ -33,7 +33,6 @@ export default function ChannelSidebar() {
     : null
   const serverName = currentServer?.name || "No Server Selected"
 
-  // Auto-select first channel from real API channels if none selected or mismatched
   useEffect(() => {
     if (serverChannels && serverChannels.length > 0) {
       const match = serverChannels.find(c => c._id === activeChannelId)
@@ -90,7 +89,6 @@ export default function ChannelSidebar() {
   return (
     <aside className="fixed left-[72px] top-0 h-full w-[260px] bg-neutral-50 border-r border-outline-variant z-40 flex flex-col justify-between">
       <div className="flex flex-col flex-1 overflow-y-auto">
-        {/* Server header */}
         <div className="flex items-center justify-between px-4 py-3.5 bg-white border-b border-outline-variant">
           <button
             onClick={() => { if (!currentServer) dispatch(setActiveView("create-chamber")) }}
@@ -119,7 +117,6 @@ export default function ChannelSidebar() {
         </div>
 
         <div className="overflow-y-auto px-2 py-3 space-y-4">
-          {/* Text channels */}
           <div>
             <div className="flex items-center justify-between px-2 py-1 text-on-surface-variant text-xs font-semibold uppercase tracking-wider">
               <span>Text Channels</span>
@@ -173,7 +170,6 @@ export default function ChannelSidebar() {
             </div>
           </div>
 
-          {/* Create Channel Modal */}
           {showCreateModal && (
             <div className="fixed inset-0 bg-neutral-900/40 z-[100] flex items-center justify-center p-4">
               <div className="bg-white border border-neutral-200 rounded-xl p-6 w-full max-w-sm shadow-sm">
@@ -197,7 +193,6 @@ export default function ChannelSidebar() {
             </div>
           )}
 
-          {/* Voice channels */}
           <div>
             <div className="flex items-center justify-between px-space-xs py-1 text-outline text-label-sm font-bold tracking-wider uppercase">
               <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[13px]">expand_more</span>Voice Channels</span>
@@ -239,7 +234,6 @@ export default function ChannelSidebar() {
                         )}
                       </button>
 
-                      {/* Connected users below voice channel */}
                       {members.length > 0 && (
                         <div className="ml-5 pl-2.5 my-0.5 border-l-2 border-outline-variant/30 space-y-1 py-0.5">
                           {members.map(m => (
@@ -259,7 +253,6 @@ export default function ChannelSidebar() {
         </div>
       </div>
 
-        {/* User bar */}
         <div className="p-3 bg-white border-t border-neutral-200 flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
             <div className="relative flex-shrink-0">

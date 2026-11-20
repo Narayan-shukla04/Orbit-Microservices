@@ -6,7 +6,6 @@ export default function TermsPage() {
 
   return (
     <div className="min-h-screen bg-surface text-on-surface font-sans antialiased">
-      {/* Nav */}
       <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-outline-variant">
         <div className="h-16 max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between">
           <button onClick={() => navigate("/")} className="text-base font-bold tracking-tight text-on-surface hover:opacity-80 transition-opacity">Orbit</button>

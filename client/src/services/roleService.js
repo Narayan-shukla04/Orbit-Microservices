@@ -1,6 +1,5 @@
 import { axiosClient } from "../api/axiosClient";
 
-// Layer 2: Domain Service - Roles
 export const roleService = {
   getRoles: async (serverId) => {
     return axiosClient.get(`/role/getroles/${serverId}`);

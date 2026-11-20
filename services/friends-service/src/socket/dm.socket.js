@@ -2,22 +2,7 @@ import jwt from "jsonwebtoken"
 import { DmMessage } from "../models/dmMessage.model.js"
 import { conversationId } from "../controllers/friends.controller.js"
 
-/**
- * Socket.IO handler for 1-on-1 DMs.
- *
- * Auth: reads accessToken cookie that Socket.IO forwards on the handshake.
- * Room: each DM conversation uses a stable room = conversationId(userA, userB).
- *
- * Events (client → server):
- *   dm:join   { friendId }              — join the DM room with this friend
- *   dm:send   { friendId, content }     — send a message
- *
- * Events (server → client):
- *   dm:message  { _id, sender, content, createdAt }  — new message in room
- *   dm:error    { message }
- */
 export function registerDmSocket(io) {
-  // Authenticate on handshake
   io.use((socket, next) => {
     try {
       const token =
@@ -53,7 +38,6 @@ export function registerDmSocket(io) {
           sender: socket.userId,
           content: content.trim(),
         })
-        // Emit to both users in the room
         io.to(room).emit("dm:message", {
           _id: msg._id,
           sender: socket.userId,

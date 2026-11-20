@@ -1,9 +1,5 @@
 import { io } from "socket.io-client"
 
-/**
- * Separate Socket.IO client for DMs (friends-service, port 3006).
- * Kept separate from the guild socket so the two don't interfere.
- */
 let dmSocket = null
 
 export const getDmSocket = () => {

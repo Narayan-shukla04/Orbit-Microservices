@@ -12,16 +12,10 @@ app.set("trust proxy", 1)
 app.use(express.json())
 app.use(cookieParser())
 
-// Health check
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", service: "messaging-service" })
 })
 
-
-
-
-
-// Routes
 app.use("/api/messages", messageRoutes)
 
 const httpServer = http.createServer(app)

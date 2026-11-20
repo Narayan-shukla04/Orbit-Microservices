@@ -80,7 +80,6 @@ export default function VoicePage() {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-neutral-50 text-on-surface overflow-hidden select-none">
-      {/* Top channel header */}
       <header className="h-12 px-4 border-b border-outline-variant flex items-center justify-between flex-shrink-0 z-10 bg-white">
         <div className="flex items-center gap-2 text-on-surface font-semibold">
           <span className="material-symbols-outlined text-[18px] text-neutral-500">volume_up</span>
@@ -104,7 +103,6 @@ export default function VoicePage() {
         </div>
       </header>
 
-      {/* Main voice arena */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 relative">
         {error && (
           <div className="absolute top-4 px-3 py-1.5 bg-red-50 text-red-700 border border-red-200 rounded text-xs font-medium">
@@ -113,7 +111,6 @@ export default function VoicePage() {
         )}
 
         {!isConnected ? (
-          /* Empty / Unconnected State */
           <div className="flex flex-col items-center text-center">
             <h1 className="text-2xl font-bold text-on-surface tracking-tight">
               {channelTitle}
@@ -132,7 +129,6 @@ export default function VoicePage() {
             </button>
           </div>
         ) : (
-          /* Connected State */
           <div className="flex flex-col items-center justify-between h-full w-full max-w-4xl py-6">
             <div className="flex-1 flex flex-wrap items-center justify-center gap-4 p-4 overflow-y-auto">
               {participants.map(p => (
@@ -140,7 +136,6 @@ export default function VoicePage() {
               ))}
             </div>
 
-            {/* Bottom dock */}
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-outline-variant">
               <button
                 onClick={toggleMute}

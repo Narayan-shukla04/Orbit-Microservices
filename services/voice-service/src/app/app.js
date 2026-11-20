@@ -11,7 +11,6 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
 
-// Health check
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", service: "voice-service" })
 })

@@ -80,7 +80,6 @@ export default function SettingsPage() {
 
   return (
     <div className="flex-1 flex h-full bg-white overflow-hidden">
-      {/* Settings sidebar */}
       <aside className="w-52 shrink-0 bg-neutral-50 border-r border-outline-variant flex flex-col py-4 px-2 gap-1">
         <div className="px-3 py-1 text-[11px] text-neutral-500 uppercase tracking-wider font-semibold mb-1">Settings</div>
         {TABS.map(t => (
@@ -91,7 +90,6 @@ export default function SettingsPage() {
         ))}
       </aside>
 
-      {/* Main settings */}
       <div className="flex-1 overflow-y-auto p-6 relative">
         {saveStatus && (
           <div className="max-w-xl mb-4 p-2.5 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2">
@@ -182,7 +180,6 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                {/* Invite Code Generator Card */}
                 <div className="p-4 rounded-lg border border-outline-variant bg-white space-y-3">
                   <div className="flex items-center justify-between">
                     <div>

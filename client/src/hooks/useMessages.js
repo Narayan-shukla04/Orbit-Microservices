@@ -3,7 +3,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { messageService } from "../services/messageService";
 import { getSocket, joinChannel, leaveChannel } from "../services/socketService";
 
-// Layer 3: Application / Query Hook for Messages
 export const MESSAGE_KEYS = {
   channelMessages: (channelId) => ["messages", channelId],
 };

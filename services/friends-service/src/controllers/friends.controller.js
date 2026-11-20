@@ -4,16 +4,13 @@ import { User } from "../models/user.model.js"
 import AppError from "../utils/AppError.js"
 import asyncHandler from "../middleware/asyncHandler.js"
 
-/** Stable room key for a pair of users: smaller id first */
 export const conversationId = (a, b) =>
   [a, b].map(String).sort().join("_")
-
 
 export const sendRequest = asyncHandler(async (req, res) => {
   const { recipientId } = req.params
   if (recipientId === req.userId)
     throw new AppError("Cannot add yourself", 400)
-
 
   const existing = await Friendship.findOne({
     requester: req.userId,
@@ -28,7 +25,6 @@ export const sendRequest = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, data: friendship })
 })
 
-
 export const acceptRequest = asyncHandler(async (req, res) => {
   const friendship = await Friendship.findOneAndUpdate(
     { _id: req.params.friendshipId, recipient: req.userId, status: "pending" },
@@ -38,7 +34,6 @@ export const acceptRequest = asyncHandler(async (req, res) => {
   if (!friendship) throw new AppError("Request not found", 404)
   res.json({ success: true, data: friendship })
 })
-
 
 export const declineRequest = asyncHandler(async (req, res) => {
   const friendship = await Friendship.findOneAndUpdate(
@@ -50,7 +45,6 @@ export const declineRequest = asyncHandler(async (req, res) => {
   res.json({ success: true, data: friendship })
 })
 
-
 export const removeFriend = asyncHandler(async (req, res) => {
   const friendship = await Friendship.findOneAndDelete({
     _id: req.params.friendshipId,
@@ -61,7 +55,6 @@ export const removeFriend = asyncHandler(async (req, res) => {
   res.json({ success: true })
 })
 
-
 export const listFriends = asyncHandler(async (req, res) => {
   const friendships = await Friendship.find({
     $or: [{ requester: req.userId }, { recipient: req.userId }],
@@ -69,7 +62,6 @@ export const listFriends = asyncHandler(async (req, res) => {
   }).lean()
   res.json({ success: true, data: friendships })
 })
-
 
 export const listPending = asyncHandler(async (req, res) => {
   const requests = await Friendship.find({
@@ -96,12 +88,10 @@ export const getDmHistory = asyncHandler(async (req, res) => {
   res.json({ success: true, data: msgs.reverse() })
 })
 
-
 export const searchUsers = asyncHandler(async (req, res) => {
   const { username } = req.query
   if (!username) throw new AppError("username query param required", 400)
 
-  // ponytail: regex scan — add a text index on users.username if this gets slow
   const users = await User.find({
     _id: { $ne: req.userId },
     username: { $regex: username, $options: "i" },

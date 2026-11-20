@@ -18,13 +18,11 @@ console.log("logged in user",req.user);
     content,
     authorId: req.user,
     channelId,
-    // attachments :files?.attachments ||""
 
   })
 
 
   const messageDetails = await userdetails(req.user)
-  // console.log(messageDetails);
 
   const broadcastMessage = {
     messageId: message._id,

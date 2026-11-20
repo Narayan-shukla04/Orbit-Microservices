@@ -9,7 +9,6 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen bg-surface text-on-surface font-sans antialiased flex flex-col justify-between">
-      {/* Header bar */}
       <header className="w-full max-w-6xl mx-auto px-6 h-16 flex items-center justify-between border-b border-outline-variant">
         <Link to="/" className="flex items-center gap-2">
           <span className="text-xl font-bold tracking-tight text-on-surface">Orbit</span>
@@ -20,10 +19,8 @@ export default function AuthLayout({
         </Link>
       </header>
 
-      {/* Main card */}
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-[420px] bg-white border border-outline-variant rounded-xl p-8">
-          {/* Brand header */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-on-surface tracking-tight">
               {title}
@@ -33,7 +30,6 @@ export default function AuthLayout({
             </p>
           </div>
 
-          {/* Tab switcher */}
           <div className="grid grid-cols-2 p-1 bg-surface-container rounded-lg mb-6 border border-outline-variant">
             <Link
               to="/login"
@@ -57,7 +53,6 @@ export default function AuthLayout({
             </Link>
           </div>
 
-          {/* Error Banner */}
           {error && (
             <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2">
               <span className="material-symbols-outlined text-[16px] text-red-600 shrink-0 mt-0.5">error</span>
@@ -67,12 +62,10 @@ export default function AuthLayout({
             </div>
           )}
 
-          {/* Form Content */}
           {children}
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="w-full text-center py-6 text-xs text-on-surface-variant border-t border-outline-variant">
         Orbit · Open Community Communication
       </footer>

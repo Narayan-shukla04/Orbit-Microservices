@@ -1,6 +1,5 @@
 import { axiosClient } from "../api/axiosClient";
 
-// Layer 2: Domain Service - Channels
 export const channelService = {
   getChannels: async (serverId) => {
     return axiosClient.post(`/channel/getchannels/${serverId}`);

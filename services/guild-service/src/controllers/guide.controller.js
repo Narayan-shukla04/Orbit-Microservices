@@ -210,7 +210,6 @@ export const kickMembercontroller = asyncHandler(async (req, res) => {
 
   if (!serverMembers) throw new appError(404, "already kicked!");
 
-  // console.log(serverMembers[0].role);
 
   await roleModel.deleteMany({ userId: user });
   await memberModel.deleteOne({ serverId: serverMembers.serverID });

@@ -4,11 +4,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { store } from "./store"
 import { useAuthSession } from "./hooks/useAuth"
 
-// Guards
 import ProtectedRoute from "./components/auth/ProtectedRoute"
 import PublicRoute    from "./components/auth/PublicRoute"
 
-// Shell & Pages
 import ServerRail     from "./components/layout/ServerRail"
 import ChannelSidebar from "./components/layout/ChannelSidebar"
 import TopNav         from "./components/layout/TopNav"
@@ -60,10 +58,6 @@ function Shell() {
   )
 }
 
-/**
- * RootLayout initializes background session verification on boot
- * and mounts the matching route via Outlet.
- */
 function RootLayout() {
   useAuthSession()
   return <Outlet />

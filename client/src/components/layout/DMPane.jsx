@@ -3,14 +3,11 @@ import { useSelector } from "react-redux"
 import { useDM } from "../../hooks/useDM"
 import { useFriends, useSendRequest, usePendingRequests, useAcceptRequest, useDeclineRequest, useSearchUsers } from "../../hooks/useFriends"
 
-/**
- * DMPane — 1-on-1 direct message view.
- */
 export default function DMPane() {
   const currentUser = useSelector((s) => s.ui.currentUser)
   const [activeFriendship, setActiveFriendship] = useState(null)
   const [searchInput, setSearchInput] = useState("")
-  const [tab, setTab] = useState("friends") // "friends" | "pending"
+  const [tab, setTab] = useState("friends")
 
   const { data: friends = [], isLoading: loadingFriends } = useFriends()
   const { data: pending = [], isLoading: loadingPending } = usePendingRequests()
@@ -27,9 +24,7 @@ export default function DMPane() {
 
   return (
     <div className="flex flex-1 overflow-hidden bg-white">
-      {/* Left panel */}
       <aside className="w-60 shrink-0 flex flex-col bg-neutral-50 border-r border-outline-variant">
-        {/* Search & add friend */}
         <div className="p-3 border-b border-outline-variant">
           <label className="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider block mb-1.5">
             Add Friend
@@ -68,7 +63,6 @@ export default function DMPane() {
           )}
         </div>
 
-        {/* Tabs */}
         <div className="flex border-b border-outline-variant">
           {[["friends", "Friends"], ["pending", `Pending${pending.length ? ` (${pending.length})` : ""}`]].map(([key, label]) => (
             <button
@@ -85,7 +79,6 @@ export default function DMPane() {
           ))}
         </div>
 
-        {/* List */}
         <div className="flex-1 overflow-y-auto py-2">
           {tab === "friends" && (
             loadingFriends ? (
@@ -149,7 +142,6 @@ export default function DMPane() {
         </div>
       </aside>
 
-      {/* Right panel */}
       {friendId ? (
         <Conversation friendId={String(friendId)} currentUserId={String(currentUser?._id)} />
       ) : (
@@ -179,7 +171,6 @@ function Conversation({ friendId, currentUserId }) {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-white">
-      {/* Header */}
       <div className="h-12 flex items-center gap-2 px-4 border-b border-outline-variant bg-white">
         <div className="w-6 h-6 rounded-full bg-neutral-200 border border-outline-variant flex items-center justify-center text-[10px] font-semibold text-neutral-800">
           {friendId.slice(-2).toUpperCase()}
@@ -187,7 +178,6 @@ function Conversation({ friendId, currentUserId }) {
         <span className="text-xs font-bold text-on-surface">{friendId.slice(0, 16)}…</span>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2">
         {isLoading && <p className="text-xs text-neutral-400">Loading messages…</p>}
         {messages.map((msg, i) => {
@@ -217,7 +207,6 @@ function Conversation({ friendId, currentUserId }) {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
       <form onSubmit={handleSend} className="p-3 border-t border-outline-variant flex gap-2 bg-white">
         <input
           value={input}

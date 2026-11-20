@@ -1,6 +1,5 @@
 import { axiosClient } from "../api/axiosClient";
 
-// Layer 2: Domain Service - Guilds / Servers
 export const guildService = {
   getServers: async () => {
     return axiosClient.get("/guild/getserver");

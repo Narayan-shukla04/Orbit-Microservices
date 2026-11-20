@@ -78,7 +78,6 @@ export const loginController = asyncHandler(async (req, res) => {
 });
 
 export const googleAuth = (req, res, next) => {
-  // Handled directly by passport middleware in routes
 };
 
 export const googleAuthCallback = asyncHandler(async (req, res) => {

@@ -22,7 +22,6 @@ memberSchema.index({ userId: 1, serverId: 1 }, { unique: true })
 
 const memberModel = mongoose.model("members", memberSchema)
 
-// Automatically drop the legacy rogue index on startup
 memberModel.collection.dropIndex("userId_1_guildId_1").catch(() => {})
 
 export default memberModel

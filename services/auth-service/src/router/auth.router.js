@@ -30,7 +30,6 @@ router.patch("/reset-password", validate(resetPasswordSchema), resetPassword)
 
 router.post("/test",authMiddleware, testController)
 
-// midilware banana he check karne ke liye ki iser sahi he ya galata
 router.post("/logout",authMiddleware,logoutController)
 
  export default router

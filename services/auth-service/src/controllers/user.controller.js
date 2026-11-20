@@ -110,7 +110,6 @@ export const changePasswordController = asyncHandler(async (req, res) => {
 
 
 
-// exports
 
 export const userDetailsById=asyncHandler(async(req,res)=>{
   

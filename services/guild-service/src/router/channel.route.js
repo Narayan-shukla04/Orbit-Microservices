@@ -5,7 +5,6 @@ import { createChannel, exportChannelDetailsController, getchannelController, up
 
 const router= express.Router()
 
-// export in other services
 
 router.post("/export/channeldetails",exportChannelDetailsController)
 

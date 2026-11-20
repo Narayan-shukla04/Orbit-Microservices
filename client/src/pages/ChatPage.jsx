@@ -33,7 +33,6 @@ export default function ChatPage() {
   const [newServerName, setNewServerName] = useState("")
   const [serverError, setServerError] = useState("")
 
-  // Real-time socket subscription for active channel
   useChannelSocket(activeChannelId)
 
   const { data: liveMessages } = useChannelMessagesQuery(activeChannelId)
@@ -192,9 +191,7 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-row w-full h-full min-w-0 bg-surface">
-      {/* Main arena */}
       <section className="flex-1 flex flex-col h-full min-w-0 bg-white">
-        {/* Channel header */}
         <header className="h-12 px-4 flex-shrink-0 bg-white border-b border-outline-variant flex items-center justify-between z-10">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="flex items-center gap-1 flex-shrink-0">
@@ -210,9 +207,7 @@ export default function ChatPage() {
           </div>
         </header>
 
-        {/* Messages */}
         <div ref={feedRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-          {/* Welcome stamp */}
           <div className="my-2 pb-4 border-b border-outline-variant">
             <div className="w-9 h-9 rounded bg-neutral-100 border border-outline-variant flex items-center justify-center text-on-surface mb-2">
               <span className="material-symbols-outlined text-[20px]">tag</span>
@@ -221,7 +216,6 @@ export default function ChatPage() {
             <p className="mt-0.5 text-xs text-neutral-500">This is the start of the #{activeChannel} channel.</p>
           </div>
 
-          {/* Date divider */}
           <div className="relative flex items-center justify-center my-4">
             <div className="absolute inset-x-0 h-px bg-outline-variant"/>
             <span className="relative px-2 py-0.5 rounded bg-white border border-outline-variant text-neutral-500 text-[10px] font-medium uppercase">Today</span>
@@ -264,7 +258,6 @@ export default function ChatPage() {
           )}
         </div>
 
-        {/* Input tray */}
         <div className="p-4 flex-shrink-0">
           <form onSubmit={handleSubmit(onSend)} className="relative flex items-center bg-neutral-50 border border-outline-variant rounded-lg px-3 py-1.5">
             <button type="button" title="Attach" className="p-1 rounded text-neutral-400 hover:text-on-surface transition-colors">
@@ -283,7 +276,6 @@ export default function ChatPage() {
         </div>
       </section>
 
-      {/* Member list */}
       {memberListOpen && (
         <aside className="w-56 flex-shrink-0 bg-neutral-50 border-l border-outline-variant flex flex-col h-full overflow-y-auto px-3 py-3 select-none">
           {membersList.map(g => (

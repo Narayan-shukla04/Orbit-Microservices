@@ -30,7 +30,6 @@ export default function ServerRail() {
   return (
     <aside className="fixed left-0 top-0 h-full w-[72px] bg-white border-r border-outline-variant z-50 flex flex-col items-center py-4 justify-between">
       <div className="flex flex-col items-center gap-2 w-full">
-        {/* Direct Messages Button */}
         <button
           type="button"
           onClick={() => dispatch(setActiveView("dm"))}
@@ -49,7 +48,6 @@ export default function ServerRail() {
 
         <div className="w-8 h-px bg-outline-variant my-1" />
 
-        {/* Server list */}
         <div className="flex flex-col items-center gap-2 w-full">
           {servers.map(s => (
             <button
@@ -73,7 +71,6 @@ export default function ServerRail() {
             </button>
           ))}
 
-          {/* Add Server Button */}
           <button
             onClick={() => dispatch(setActiveView("create-chamber"))}
             type="button"

@@ -1,6 +1,5 @@
 import { axiosClient } from "../api/axiosClient";
 
-// Layer 2: Domain Service - User Domain
 export const userService = {
   getMe: async () => {
     return axiosClient.get("/user/getme");

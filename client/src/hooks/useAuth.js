@@ -12,15 +12,10 @@ import {
   setActiveView,
 } from "../store/uiSlice";
 
-// Layer 3: Application / Custom Query Hooks Layer
 export const AUTH_KEYS = {
   currentUser: ["currentUser"],
 };
 
-/**
- * Initializes and verifies session authentication state on application boot.
- * Synchronizes HTTP-only cookies with Redux state.
- */
 export function useAuthSession() {
   const dispatch = useDispatch();
 
@@ -87,7 +82,6 @@ export function useLoginMutation() {
         const meRes = await userService.getMe();
         profile = meRes?.user || meRes?.data || null;
       } catch {
-        // Fallback user state
       }
 
       dispatch(
@@ -122,7 +116,6 @@ export function useRegisterMutation() {
         const meRes = await userService.getMe();
         profile = meRes?.user || meRes?.data || null;
       } catch {
-        // Fallback user state
       }
 
       dispatch(

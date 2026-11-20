@@ -16,7 +16,6 @@ import {
 
 const router = express.Router();
 
-// export 
 router.post("/export/mydetails", userDetailsById)
 router.post("/export/usersdetails",sendingUsersDetails)
 

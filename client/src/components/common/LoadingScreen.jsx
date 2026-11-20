@@ -9,7 +9,6 @@ export default function LoadingScreen({ message = "Loading..." }) {
   return (
     <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white text-on-surface select-none">
       <div className="relative z-10 flex flex-col items-center gap-4">
-        {/* Flat minimal brand mark */}
         <button
           type="button"
           onClick={() => setShowFriends((prev) => !prev)}
@@ -19,7 +18,6 @@ export default function LoadingScreen({ message = "Loading..." }) {
           OR
         </button>
 
-        {/* Loading text */}
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="flex items-center gap-2">
             <span className="w-3.5 h-3.5 rounded-full border-2 border-neutral-900 border-t-transparent animate-spin" />
@@ -32,7 +30,6 @@ export default function LoadingScreen({ message = "Loading..." }) {
           </span>
         </div>
 
-        {/* Friends list overlay */}
         {showFriends && (
           <div className="w-80 max-h-64 overflow-y-auto bg-white border border-outline-variant rounded-lg p-4 shadow-sm text-left mt-2">
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-outline-variant">

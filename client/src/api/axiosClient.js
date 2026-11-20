@@ -2,24 +2,21 @@ import axios from "axios";
 import { store } from "../store";
 import { logout } from "../store/uiSlice";
 
-// Layer 1: HTTP Client Infrastructure
 export const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "/api",
-  withCredentials: true, // Needed for cookie-based JWT authentication
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
   timeout: 15000,
 });
 
-// Response interceptor for consistent error extraction and auth synchronization
 axiosClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
     const status = error.response?.status;
     const url = error.config?.url || "";
 
-    // Auto-logout only when the authentication session/token is expired or rejected
     const isAuthPath = url.includes("/user/") || url.includes("/auth/");
     const isTokenError =
       error.response?.data?.message?.toLowerCase().includes("token") ||

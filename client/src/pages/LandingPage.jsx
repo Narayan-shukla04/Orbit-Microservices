@@ -56,7 +56,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white text-on-surface font-sans antialiased">
-      {/* Navigation */}
       <header className="sticky top-0 z-50 bg-white border-b border-outline-variant">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-8">
@@ -88,7 +87,6 @@ export default function LandingPage() {
       </header>
 
       <main className="max-w-6xl mx-auto px-6">
-        {/* Editorial Hero */}
         <section className="pt-20 pb-16 border-b border-outline-variant">
           <div className="max-w-3xl">
             <p className="text-xs font-mono uppercase tracking-wider text-neutral-500 mb-4">
@@ -118,7 +116,6 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* App Preview Frame */}
           <div className="mt-12 border border-outline-variant rounded-lg bg-neutral-50 overflow-hidden text-left">
             <div className="h-9 px-3 bg-white border-b border-outline-variant flex items-center justify-between">
               <div className="flex items-center gap-1.5">
@@ -184,7 +181,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features Grid */}
         <section id="features" className="py-16 border-b border-outline-variant">
           <div className="mb-8">
             <h2 className="text-xl font-bold text-on-surface">Core Capabilities</h2>
@@ -201,7 +197,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Voice Section */}
         <section id="voice" className="py-16 border-b border-outline-variant">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -264,7 +259,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Comparison Table */}
         <section id="compare" className="py-16 border-b border-outline-variant">
           <div className="mb-6">
             <h2 className="text-xl font-bold text-on-surface">Feature Comparison</h2>
@@ -292,7 +286,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Pricing */}
         <section id="pricing" className="py-16 border-b border-outline-variant">
           <div className="mb-8">
             <h2 className="text-xl font-bold text-on-surface">Simple Pricing</h2>
@@ -335,7 +328,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Footer */}
         <footer className="py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
           <span>Orbit Platform © 2026</span>
           <div className="flex items-center gap-4">

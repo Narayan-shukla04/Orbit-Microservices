@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 
-// const publicRouts = ["api/auth/login", "api/auth/register", "api/auth/refresh"];
 
 export const verifyToken = (req, res, next) => {
   try {

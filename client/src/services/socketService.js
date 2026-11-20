@@ -2,9 +2,6 @@ import { io } from "socket.io-client";
 
 let socket = null;
 
-/**
- * Returns a singleton Socket.IO client instance configured for real-time messaging.
- */
 export const getSocket = () => {
   if (!socket) {
     const socketUrl = import.meta.env.VITE_SOCKET_URL || undefined;

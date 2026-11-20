@@ -1,11 +1,9 @@
-/** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // High-contrast neutral palette (Clean, flat, editorial)
         'surface':                   '#ffffff',
         'surface-dim':               '#f8fafc',
         'surface-bright':            '#ffffff',
@@ -53,7 +51,6 @@ export default {
         'background':                '#ffffff',
         'on-background':             '#09090b',
         'surface-variant':           '#f4f4f5',
-        // Dark / Canvas Accents
         'nx-bg':           '#09090b',
         'nx-surface':      '#18181b',
         'nx-surface-high': '#27272a',
@@ -131,5 +128,4 @@ export default {
   },
   plugins: [],
 }
-
 

@@ -27,9 +27,7 @@ export const serverMemberDetails=async (serverId,cookie)=>{
         }
        }
     )
-    // console.log("response details from server ms",response.data.member);
     
-    // if (!response.data?.member) throw new AppError(400, "channel member details fetch failed")
     return response.data.member
 
 }

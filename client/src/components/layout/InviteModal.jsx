@@ -68,7 +68,6 @@ export default function InviteModal() {
         onClick={e => e.stopPropagation()}
         className="bg-white border border-outline-variant rounded-lg p-5 w-full max-w-sm"
       >
-        {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded bg-neutral-100 border border-outline-variant flex items-center justify-center text-on-surface">
@@ -88,7 +87,6 @@ export default function InviteModal() {
           </button>
         </div>
 
-        {/* Current Invite Code Box */}
         {currentServer ? (
           <div className="space-y-3">
             <div>
@@ -118,7 +116,6 @@ export default function InviteModal() {
               </div>
             </div>
 
-            {/* Generate New Code Button */}
             <div className="flex items-center justify-between pt-1">
               <span className="text-xs text-neutral-500">Need a fresh code?</span>
               <button
@@ -140,7 +137,6 @@ export default function InviteModal() {
 
         <hr className="my-4 border-outline-variant" />
 
-        {/* Join Server by Invite Code */}
         <div>
           <h4 className="text-xs font-bold text-on-surface mb-0.5">Join Another Server</h4>
           <p className="text-xs text-neutral-500 mb-2">Have an invite code from someone else?</p>

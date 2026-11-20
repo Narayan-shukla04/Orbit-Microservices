@@ -3,18 +3,10 @@ import { useQuery } from "@tanstack/react-query"
 import { friendService } from "../services/friendService"
 import { getDmSocket, joinDm, sendDm } from "../services/dmSocketService"
 
-/**
- * Manages DM state for a single conversation with `friendId`.
- * - Fetches history on mount via REST
- * - Joins the Socket.IO room
- * - Appends incoming dm:message events
- * - Returns messages, send fn, and loading state
- */
 export function useDM(friendId) {
   const [messages, setMessages] = useState([])
   const joined = useRef(false)
 
-  // Initial history load
   const { data, isLoading } = useQuery({
     queryKey: ["dm", friendId],
     queryFn: () => friendService.history(friendId).then((r) => r.data),
@@ -25,7 +17,6 @@ export function useDM(friendId) {
     if (data) setMessages(data)
   }, [data])
 
-  // Join room + listen for new messages
   useEffect(() => {
     if (!friendId) return
 

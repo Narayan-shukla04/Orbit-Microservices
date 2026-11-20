@@ -6,7 +6,6 @@ import upload from "../config/multer.js";
 
 const router = express.Router()
 
-// exports in other services
 router.use(verifyAuthUser)
 router.post("/export/channel-member",getchannelMemberDetailsController)
 
