@@ -92,7 +92,6 @@ GATEWAY_URL="$(get_url orbit-api-gateway)"
 echo "==> [7/7] Building and deploying orbit-client..."
 IMAGE_TAG="gcr.io/$PROJECT_ID/orbit-client:latest"
 gcloud builds submit ./client \
-  --dockerfile=./client/Dockerfile.prod \
   --substitutions=_VITE_API_URL="$GATEWAY_URL/api",_VITE_SOCKET_URL="$MESSAGING_URL",_VITE_FRIENDS_SOCKET_URL="$FRIENDS_URL" \
   --tag "$IMAGE_TAG"
 

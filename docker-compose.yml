@@ -175,7 +175,9 @@ services:
           path: ./services/friends-service/package.json
 
   client:
-    build: ./client
+    build:
+      context: ./client
+      target: dev
     ports:
       - "5173:5173"
     environment:

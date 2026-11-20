@@ -127,7 +127,6 @@ Write-Host "==> [7/7] Building and deploying orbit-client..." -ForegroundColor C
 $ImageTag = "gcr.io/$ProjectId/orbit-client:latest"
 
 gcloud builds submit ./client `
-    --dockerfile=./client/Dockerfile.prod `
     --substitutions=_VITE_API_URL="$GatewayUrl/api",_VITE_SOCKET_URL="$MessagingUrl",_VITE_FRIENDS_SOCKET_URL="$FriendsUrl" `
     --tag $ImageTag
 
