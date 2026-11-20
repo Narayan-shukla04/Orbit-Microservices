@@ -7,6 +7,9 @@
 **/.env.*
 !.env.example
 !.env*.example
+env.yaml
+env.*.yaml
+!env.yaml.example
 
 services/auth-service/.env
 
