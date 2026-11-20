@@ -8,6 +8,14 @@ const FRIENDS_SERVICE_URL   = process.env.FRIENDS_SERVICE_URL   || "http://local
 const VOICE_SERVICE_URL     = process.env.VOICE_SERVICE_URL     || "http://localhost:3005";
 
 // ─── Proxy factory helper ─────────────────────────────────────────────────────
+// Strip downstream CORS headers so api-gateway is the single source of truth for CORS
+const stripDownstreamCors = (proxyRes) => {
+  delete proxyRes.headers["access-control-allow-origin"];
+  delete proxyRes.headers["access-control-allow-credentials"];
+  delete proxyRes.headers["access-control-allow-methods"];
+  delete proxyRes.headers["access-control-allow-headers"];
+};
+
 // When Express mounts proxy on "/api/auth", it strips "/api/auth" from req.url
 // before the proxy sees it. We must rewrite the path back so the downstream
 // service gets the full path (e.g. /api/auth/login, /api/guild/create).
@@ -17,6 +25,9 @@ const makeProxy = (target, mountPath) =>
     changeOrigin: true,
     // Restore the stripped prefix so downstream gets the full URL
     pathRewrite: (path) => `${mountPath}${path}`,
+    on: {
+      proxyRes: stripDownstreamCors,
+    },
   });
 
 // ─── Auth Service  (port 3001) ───────────────────────────────────────────────
@@ -44,6 +55,9 @@ export const friendsProxy = createProxyMiddleware({
   changeOrigin: true,
   ws: true, // proxy WebSocket upgrade for Socket.IO
   pathRewrite: (path) => `/api/friends${path}`,
+  on: {
+    proxyRes: stripDownstreamCors,
+  },
 });
 
 // ─── Voice Service  (port 3005) ──────────────────────────────────────────────
